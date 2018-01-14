@@ -1,0 +1,142 @@
+001: package kr.co.infopub.chapter.s190;
+002: 
+003: import java.sql.Date;
+004: import java.sql.SQLException;
+005: import java.util.List;
+006: 
+007: import javafx.collections.FXCollections;
+008: import javafx.collections.ObservableList;
+009: import javafx.fxml.FXML;
+010: import javafx.scene.chart.PieChart;
+011: import javafx.scene.chart.PieChart.Data;
+012: import javafx.scene.control.Label;
+013: import javafx.scene.control.TableColumn;
+014: import javafx.scene.control.TableView;
+015: import javafx.scene.input.MouseEvent;
+016: import javafx.scene.layout.AnchorPane;
+017: import kr.co.infopub.chapter.s190.dto.EmpConvert;
+018: import kr.co.infopub.chapter.s190.dto.DepCount;
+019: import kr.co.infopub.chapter.s190.dto.DepCountConvert;
+020: import kr.co.infopub.chapter.s190.dto.DepCountDto;
+021: import kr.co.infopub.chapter.s190.dto.Employee;
+022: import kr.co.infopub.chapter.s190.dto.EmployeeDto;
+023: import kr.co.infopub.chapter.s190.model.EmployeeDAO;
+024: import kr.co.infopub.chapter.s190.util.EmpUtil;
+025: import kr.co.infopub.chapter.s190.util.PTS;
+026: 
+027: public class PieChartController {
+028: 
+029: //    @FXML
+030: //    private PieChart pieChart;
+031:     @FXML
+032:     private AnchorPane pieAnchor;
+033:     
+034:     @FXML
+035:     private TableView<Employee> employeeTable;
+036:     @FXML
+037:     private TableColumn<Employee, Integer>  empIdColumn;
+038:     @FXML
+039:     private TableColumn<Employee, String>  empNameColumn;
+040:     @FXML
+041:     private TableColumn<Employee, String> empLastNameColumn;
+042:     @FXML
+043:     private TableColumn<Employee, String> empEmailColumn;
+044:     @FXML
+045:     private TableColumn<Employee, String> empPhoneNumberColumn;
+046:     @FXML
+047:     private TableColumn<Employee, Date> empHireDateColumn;
+048:      
+049:     EmployeeDAO employeeDAO=new EmployeeDAO();
+050:     
+051:    
+052:     public void refresh(){
+053:     	pieAnchor.getChildren().clear();
+054:     	initialize();
+055:     }
+056:     @FXML
+057:     void initialize() {
+058:     	
+059:     	
+060:     	empIdColumn.setCellValueFactory(cellData -> cellData.getValue().employeeIdProperty().asObject());
+061:         empNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
+062:         empLastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
+063:         empEmailColumn.setCellValueFactory(cellData -> cellData.getValue().emailProperty());
+064:         empPhoneNumberColumn.setCellValueFactory(cellData -> cellData.getValue().phoneNumberProperty());
+065:         empHireDateColumn.setCellValueFactory(cellData -> cellData.getValue().hireDateProperty());
+066:     	
+067:     	try {
+068:     		
+069:     	   List<DepCountDto> deplist = employeeDAO.findAllDepCounts();
+070:  		   List<DepCount> dlists =DepCountConvert.toObservProFromDto(deplist);
+071:  		   int total=employeeDAO.getEmployeesTotal();
+072:  		   System.out.println("test chart =============================="+dlists.size() +"   "+total);
+073:  		   //db 쿼리로 구하는 것이 더 좋을 것이다.
+074: // 		   int total=0;
+075: // 		   for(DepCount dc: dlists){
+076: // 			   total+=dc.getCount();
+077: // 		   }
+078:  		   //final int  ftotal=total;   
+079:  			
+080:  			PieChart pieChart = new PieChart();
+081:  			pieChart.setTitle("부서별 인원수 총"+total+"명 " +PTS.toDay());
+082:  	        pieChart.setData(getChartData(dlists));
+083:  	        pieChart.setClockwise(true); 
+084:  	        pieChart.setStartAngle(180);  
+085:  	        pieChart.setLabelsVisible(true); 
+086:  	        pieChart.setPrefWidth(800);
+087:  	        pieChart.setPrefHeight(600); 
+088:  	        final Label caption = new Label("");
+089:  	        String value=
+090:  	    	    	   "-fx-font-size: 25px;           "
+091:  	    	    	  +"-fx-font-family: 'Arial Black';    ";
+092: 
+093:  	        caption.setStyle(value);
+094:  	        
+095:  	        for (final PieChart.Data data : pieChart.getData()) {
+096:  	            data.getNode().addEventHandler(MouseEvent.MOUSE_PRESSED,
+097:  	                    e-> {
+098:  	                    	    ObservableList<Employee> populateEmploye=null;
+099: 								try {
+100: 									List<EmployeeDto> edtlist=employeeDAO.findEmployeesByDepartName( EmpUtil.dep(data.getName() ));
+101: 									populateEmploye = EmpConvert.toObservProFromDto(edtlist);
+102: 									populateEmployees(populateEmploye);
+103: 								} catch (SQLException e1) {
+104: 									
+105: 								}
+106:  	                    	   
+107:  	                            caption.setTranslateX(e.getSceneX());
+108:  	                            caption.setTranslateY(e.getSceneY());
+109:  	                            String sft=String.format("%s %.2f%%(%.0f명)", 
+110:  	                            		EmpUtil.dep(data.getName()),
+111:  	                            		100*data.getPieValue()/total,
+112:  	                            		data.getPieValue());
+113:  	                            caption.setText(sft);
+114:  	                           
+115:  	                        }
+116:  	                    );
+117:  	        }
+118:  	       pieAnchor.getChildren().addAll(pieChart,caption);
+119:  	       
+120:  		} catch (SQLException e) {
+121:  			System.out.println(e);
+122:  		}
+123: 
+124:     }
+125:     @FXML
+126:     private void populateEmployees (ObservableList<Employee> empData)  {
+127:         employeeTable.setItems(empData);
+128:     }
+129:     
+130:     private ObservableList<Data> getChartData(List<DepCount> dlists) {
+131:         ObservableList<Data> answer = FXCollections.observableArrayList();
+132:         
+133:         for (DepCount dc: dlists) {
+134:         	 answer.add(new PieChart.Data( dc.getDepartment_name()+"("+dc.getDepartment_id()+")", dc.getCount()  ));
+135:     	}
+136: 
+137:         return answer;
+138:     }
+139:     
+140:     
+141:     
+142: }

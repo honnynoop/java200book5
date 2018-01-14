@@ -1,0 +1,136 @@
+001: package kr.co.infopub.chapter.s191;
+002: 
+003: import java.sql.Date;
+004: import java.sql.SQLException;
+005: 
+006: import javafx.collections.FXCollections;
+007: import javafx.collections.ObservableList;
+008: import javafx.fxml.FXML;
+009: import javafx.fxml.FXMLLoader;
+010: import javafx.scene.chart.PieChart;
+011: import javafx.scene.chart.PieChart.Data;
+012: import javafx.scene.control.Label;
+013: import javafx.scene.control.TableColumn;
+014: import javafx.scene.control.TableView;
+015: import javafx.scene.input.MouseEvent;
+016: import javafx.scene.layout.AnchorPane;
+017: import javafx.scene.layout.BorderPane;
+018: import kr.co.infopub.chapter.s191.dto.DepCount;
+019: import kr.co.infopub.chapter.s191.dto.Employee;
+020: import kr.co.infopub.chapter.s191.model.EmployeeService;
+021: import kr.co.infopub.chapter.s191.util.EmpUtil;
+022: import kr.co.infopub.chapter.s191.util.PTS;
+023: 
+024: public class PieChartController extends BorderPane{
+025: 
+026:     @FXML
+027:     private AnchorPane pieAnchor;
+028:     
+029:     @FXML
+030:     private TableView<Employee> employeeTable;
+031:     @FXML
+032:     private TableColumn<Employee, Integer>  empIdColumn;
+033:     @FXML
+034:     private TableColumn<Employee, String>  empNameColumn;
+035:     @FXML
+036:     private TableColumn<Employee, String> empLastNameColumn;
+037:     @FXML
+038:     private TableColumn<Employee, String> empEmailColumn;
+039:     @FXML
+040:     private TableColumn<Employee, String> empPhoneNumberColumn;
+041:     @FXML
+042:     private TableColumn<Employee, Date> empHireDateColumn;
+043:      
+044:     EmployeeService service;
+045:     
+046: 	public PieChartController(EmployeeService service) {
+047: 		this.service=service;
+048: 		FXMLLoader loader4 = new FXMLLoader();
+049:         loader4.setLocation(Main.class.getResource("view/DepChartView.fxml"));
+050:         loader4.setRoot(this);
+051:         loader4.setController(this);
+052:         try {
+053:         	loader4.load();
+054:         } catch (Exception exception) {
+055:             throw new RuntimeException(exception);
+056:         }
+057: 	}
+058:    
+059:     public void refresh(){
+060:     	pieAnchor.getChildren().clear();
+061:     	initialize();
+062:     }
+063:     @FXML
+064:     void initialize() {
+065: 
+066:     	empIdColumn.setCellValueFactory(cellData -> cellData.getValue().employeeIdProperty().asObject());
+067:         empNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
+068:         empLastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
+069:         empEmailColumn.setCellValueFactory(cellData -> cellData.getValue().emailProperty());
+070:         empPhoneNumberColumn.setCellValueFactory(cellData -> cellData.getValue().phoneNumberProperty());
+071:         empHireDateColumn.setCellValueFactory(cellData -> cellData.getValue().hireDateProperty());
+072:     	
+073:     	try {
+074:     	   ObservableList<DepCount> dlists =service.findAllDepCounts();
+075:  		   int total=service.getEmployeesTotal();
+076:  		   System.out.println("test chart ====================="+dlists.size() +"   "+total);
+077: 
+078:  		   //final int  ftotal=total;   
+079:  			
+080:  			PieChart pieChart = new PieChart();
+081:  			pieChart.setTitle("부서별 인원수 총"+total+"명 " +PTS.toDay());
+082:  	        pieChart.setData(getChartData(dlists));
+083:  	        pieChart.setClockwise(true); 
+084:  	        pieChart.setStartAngle(180);  
+085:  	        pieChart.setLabelsVisible(true); 
+086:  	        pieChart.setPrefWidth(800);
+087:  	        pieChart.setPrefHeight(600); 
+088:  	        final Label caption = new Label("");
+089:  	        String value=
+090:  	    	    	   "-fx-font-size: 25px;           "
+091:  	    	    	  +"-fx-font-family: 'Arial Black';    ";
+092: 
+093:  	        caption.setStyle(value);
+094:  	        
+095:  	        for (final PieChart.Data data : pieChart.getData()) {
+096:  	            data.getNode().addEventHandler(MouseEvent.MOUSE_PRESSED,
+097:  	                    e-> {
+098:  	                    	    ObservableList<Employee> populateEmploye=null;
+099: 								try {
+100: 									populateEmploye = service.findEmployeesByDepartName( EmpUtil.dep(data.getName() ));
+101: 									showEmployeeTable(populateEmploye);
+102: 								} catch (SQLException e1) {
+103: 									
+104: 								}
+105:  	                    	   
+106:  	                            caption.setTranslateX(e.getSceneX());
+107:  	                            caption.setTranslateY(e.getSceneY());
+108:  	                            String sft=String.format("%s %.2f%%(%.0f명)", 
+109:  	                            		EmpUtil.dep(data.getName()),
+110:  	                            		100*data.getPieValue()/total,
+111:  	                            		data.getPieValue());
+112:  	                            caption.setText(sft);
+113:  	                           
+114:  	                        }
+115:  	                    );
+116:  	        }
+117:  	       pieAnchor.getChildren().addAll(pieChart,caption);
+118:  	       
+119:  		} catch (SQLException e) {
+120:  			System.out.println(e);
+121:  		}
+122: 
+123:     }
+124:     
+125:     @FXML
+126:     private void showEmployeeTable (ObservableList<Employee> empData)  {
+127:         employeeTable.setItems(empData);
+128:     }
+129:     private ObservableList<Data> getChartData(ObservableList<DepCount> dlists) {
+130:         ObservableList<Data> answer = FXCollections.observableArrayList();
+131:         for (DepCount dc: dlists) {
+132:         	 answer.add(new PieChart.Data( dc.getDepartment_name()+"("+dc.getDepartment_id()+")", dc.getCount()  ));
+133:     	}
+134:         return answer;
+135:     }
+136: }

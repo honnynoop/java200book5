@@ -1,0 +1,49 @@
+01: package kr.co.infopub.chapter.s184.dto;
+02: public class DepartmentDto {
+03:  private int department_id;
+04:  private String department_name="NOTYET";
+05:  private int manager_id;
+06:  private int location_id;
+07: 
+08:  public DepartmentDto() {
+09: 	super();
+10:  }
+11:  public DepartmentDto(int department_id, String department_name,
+12: 		int manager_id, int location_id) {
+13: 	super();
+14: 	this.department_id = department_id;
+15: 	this.department_name = department_name;
+16: 	this.manager_id = manager_id;
+17: 	this.location_id = location_id;
+18:  }
+19:  @Override
+20:  public String toString() {
+21: 	return "DepartmentDto [department_id=" + department_id +
+22: 	    ", department_name=" + department_name
+23: 	+ ", manager_id=" + manager_id + ", location_id=" + location_id + "]";
+24:  }
+25:  public int getDepartment_id() {
+26: 	return department_id;
+27:  }
+28:  public void setDepartment_id(int department_id) {
+29: 	this.department_id = department_id;
+30:  }
+31:  public String getDepartment_name() {
+32: 	return department_name;
+33:  }
+34:  public void setDepartment_name(String department_name) {
+35: 	this.department_name = department_name;
+36:  }
+37:  public int getManager_id() {
+38: 	return manager_id;
+39:  }
+40:  public void setManager_id(int manager_id) {
+41: 	this.manager_id = manager_id;
+42:  }
+43:  public int getLocation_id() {
+44: 	return location_id;
+45:  }
+46:  public void setLocation_id(int location_id) {
+47: 	this.location_id = location_id;
+48:  }
+49: }

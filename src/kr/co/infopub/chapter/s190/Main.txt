@@ -1,0 +1,65 @@
+01: package kr.co.infopub.chapter.s190;	
+02: import javafx.application.Application;
+03: import javafx.stage.Stage;
+04: import javafx.scene.Scene;
+05: import javafx.scene.layout.BorderPane;
+06: import javafx.fxml.FXMLLoader;
+07: public class Main extends Application {
+08:  private Stage primaryStage;
+09:  private BorderPane root;
+10:  String systemver="HR Information System ver.1.0";
+11:  @Override
+12:  public void start(Stage primaryStage) {	
+13: 	primaryStage.setTitle(systemver);
+14: 	this.primaryStage=primaryStage;
+15:     //---------------소스 분리 시킴
+16: 	showHR();
+17:  }
+18:  public void showHR() {
+19: 	try {
+20: 		FXMLLoader loader = new FXMLLoader();
+21:         loader.setLocation(Main.class.getResource("view/MainHrFX.fxml"));
+22:         root = (BorderPane) loader.load();
+23:         MainHrFXController empcon=loader.getController();
+24:         //------여기에 소스 추가
+25:         FXMLLoader loader4 = new FXMLLoader();
+26:         loader4.setLocation(Main.class.getResource("view/DepTabView.fxml"));
+27:         BorderPane departView = (BorderPane) loader4.load();
+28: 		
+29:         FXMLLoader loader2 = new FXMLLoader();
+30:         loader2.setLocation(Main.class.getResource("view/ManagerFx.fxml"));
+31:         BorderPane emptvView = (BorderPane) loader2.load();
+32:         
+33:         FXMLLoader loader1 = new FXMLLoader();
+34:         loader1.setLocation(Main.class.getResource("view/EmployeeSearchFx.fxml"));
+35:         BorderPane empsearchView = (BorderPane) loader1.load();
+36:         
+37:         FXMLLoader loader3 = new FXMLLoader();
+38:         loader3.setLocation(Main.class.getResource("view/EmployUpdateFx.fxml"));
+39:         BorderPane empupdateView = (BorderPane) loader3.load();
+40:         
+41:         FXMLLoader loader5 = new FXMLLoader();
+42:         loader5.setLocation(Main.class.getResource("view/DepChartView.fxml"));
+43:         
+44:         empcon.setView1(departView);
+45:         empcon.setView2(emptvView);
+46:         empcon.setView(empsearchView);
+47:         empcon.setView3(empupdateView);
+48:         empcon.setView4(loader5);
+49:         //------여기에 소스 추가
+50: 		Scene scene = new Scene(root,1250,880);
+51: 		scene.getStylesheets().add(Main.class.getResource("view/application.css").toExternalForm());
+52: 		primaryStage.setScene(scene);
+53: 		primaryStage.show();
+54: 		primaryStage.setResizable(false);
+55: 		primaryStage.setOnCloseRequest(e -> {
+56:         	System.out.println("Close primaryStage !!!");
+57:         });
+58: 	} catch(Exception e) {
+59: 		System.out.println(" start에서 Error : "+e);
+60: 	}
+61:  }
+62:  public static void main(String[] args) {
+63: 	launch(args);
+64:  }
+65: }

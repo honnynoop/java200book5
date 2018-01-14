@@ -1,0 +1,70 @@
+01: package kr.co.infopub.chapter.s182;
+02: import java.sql.Date;
+03: import java.text.ParseException;
+04: import java.text.SimpleDateFormat;
+05: public class PTS {
+06:  public static String toSDate(Date msg){
+07: 	SimpleDateFormat sdf=new SimpleDateFormat("yyyy. MM. dd");
+08: 	return sdf.format(msg);
+09:  }
+10:  public static Date toDaeS(String msg){
+11: 	SimpleDateFormat sdf=new SimpleDateFormat("yyyy. MM. dd");
+12: 	java.util.Date ud=new java.util.Date();
+13: 	try {
+14: 		ud=sdf.parse(msg);
+15: 	} catch (ParseException e) {
+16: 		
+17: 	}
+18:    return new Date(ud.getTime());
+19:  }
+20:  public static String toSDate2(Date msg){
+21: 	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+22: 	return sdf.format(msg);
+23:  }
+24:  public static String toDate3(java.util.Date msg){
+25: 	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+26: 	return sdf.format(msg);
+27:  }
+28:  public static String toDay(){
+29: 	return toDate3(new java.util.Date());
+30:  }
+31:  public static Date toDaeS2(String msg){
+32: 	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+33: 	java.util.Date ud=new java.util.Date();
+34: 	try {
+35: 		ud=sdf.parse(msg);
+36: 	} catch (ParseException e) {
+37: 		
+38: 	}
+39:    return new Date(ud.getTime());
+40:  }
+41:  public static  void log(String msg){
+42: 	String[] mmm=msg.split("     ");
+43: 	String ss="";
+44: 	for (int i = 0; i < mmm.length; i++) {
+45: 		if(mmm[i]!=null && !mmm[i].trim().equals("")){
+46: 			ss+= ""+mmm[i].trim()+" \n ";
+47: 		}
+48: 	}
+49: 	System.out.println("--------------");
+50: 	System.out.println(ss.trim());
+51: 	System.out.println("-------------");
+52:  }//
+53:  public static String  log2(String msg, String id){
+54: 	String sms=msg.replace("?", "%s");
+55: 	String ss=String.format(sms, "'"+id+"'");
+56: 	return ss;
+57:  }
+58:  public static void main(String[] args) {
+59: 	Date s=toDaeS("2017. 5. 12");
+60: 	String t=toSDate2(s);
+61: 	System.out.println(t);
+62:     String SQL = ""
+63:     		+" SELECT EMPLOYEE_ID, FIRST_NAME, LAST_NAME,                "
+64:     		+" EMAIL,PHONE_NUMBER,HIRE_DATE FROM EMPLOYEES               "
+65:     		+" START WITH  EMPLOYEE_ID =?                                "
+66:     		+" CONNECT BY PRIOR EMPLOYEE_ID = MANAGER_ID";
+67: 	log(SQL);
+68: 	log(log2(SQL,"100"));
+69:  }
+70: }

@@ -1,0 +1,35 @@
+01: package kr.co.infopub.chapter.s185.dto;
+02: 
+03: import java.util.ArrayList;
+04: import java.util.List;
+05: 
+06: import javafx.collections.FXCollections;
+07: import javafx.collections.ObservableList;
+08: 
+09: public class DepCountConvert {
+10: 
+11: 	public static DepCount toPro(DepCountDto b){
+12: 		DepCount bp=new DepCount();
+13: 		bp.setCount(b.getCount());
+14: 		bp.setDepartment_name(b.getDepartment_name());
+15: 		bp.setDepartment_id(b.getDepartment_id());
+16: 		return bp;
+17: 	}
+18: 	
+19: 	public static List<DepCount> toPro(List<DepCountDto> blist){
+20: 		List<DepCount> bplists=new ArrayList<>();
+21: 		for(DepCountDto b:blist){
+22: 			bplists.add(toPro(b));
+23: 		}
+24: 		return bplists;
+25: 	}
+26: 	public static ObservableList<DepCount> toObservPro(List<DepCount> alists){
+27: 		ObservableList<DepCount> bList = FXCollections.observableArrayList(alists);
+28: 		return bList;
+29: 	}
+30: 	
+31: 	public static ObservableList<DepCount> toObservProFromDto(List<DepCountDto> alists){
+32: 		return toObservPro(toPro(alists));
+33: 	}
+34: 	
+35: }

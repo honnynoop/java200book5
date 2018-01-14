@@ -1,0 +1,183 @@
+001: package kr.co.infopub.chapter.s189;
+002: import javafx.beans.value.ObservableValue;
+003: import javafx.collections.FXCollections;
+004: import javafx.collections.ObservableList;
+005: import javafx.event.ActionEvent;
+006: import javafx.fxml.FXML;
+007: import javafx.scene.Node;
+008: import javafx.scene.control.Button;
+009: import javafx.scene.control.Label;
+010: import javafx.scene.control.TableColumn;
+011: import javafx.scene.control.TableColumn.CellDataFeatures;
+012: import javafx.scene.image.Image;
+013: import javafx.scene.image.ImageView;
+014: import javafx.scene.layout.BorderPane;
+015: import javafx.scene.control.TableView;
+016: import javafx.scene.control.TreeItem;
+017: import javafx.scene.control.TreeView;
+018: import javafx.util.Callback;
+019: import kr.co.infopub.chapter.s189.dto.DepConvert;
+020: import kr.co.infopub.chapter.s189.dto.Department;
+021: import kr.co.infopub.chapter.s189.dto.DepartmentDto;
+022: import kr.co.infopub.chapter.s189.dto.EmpConvert;
+023: import kr.co.infopub.chapter.s189.dto.Employee;
+024: import kr.co.infopub.chapter.s189.dto.EmployeeDto;
+025: import kr.co.infopub.chapter.s189.model.EmployeeDAO;
+026: import kr.co.infopub.chapter.s189.util.EmpUtil;
+027: import java.sql.Date;
+028: import java.sql.SQLException;
+029: import java.util.List;
+030: public class DepartmentController {
+031:  @FXML
+032:  private TableView<Employee> employeeTable;
+033:  @FXML
+034:  private TableColumn<Employee, Integer>  empIdColumn;
+035:  @FXML
+036:  private TableColumn<Employee, String>  empNameColumn;
+037:  @FXML
+038:  private TableColumn<Employee, String> empLastNameColumn;
+039:  @FXML
+040:  private TableColumn<Employee, String> empEmailColumn;
+041:  @FXML
+042:  private TableColumn<Employee, String> empPhoneNumberColumn;
+043:  @FXML
+044:  private TableColumn<Employee, Date> empHireDateColumn;
+045:  @FXML
+046:  private Button searchEmpsBtn;
+047:  @FXML
+048:  private Label lbhello;
+049:  @FXML
+050:  private TreeView tvEmp;
+051:  @FXML
+052:  private BorderPane SearchTabBorder;
+053:  @FXML
+054:  private BorderPane emptvBorder;
+055:  @FXML
+056:  private BorderPane UpdateTabBorder;
+057:  EmployeeDAO employeeDAO=new EmployeeDAO();  
+058:  // 트리뷰에 이미지 - 펼침
+059:  private final Node rootIcon0 = new ImageView(
+060:     new Image(getClass().getResourceAsStream("image/book0.png"))
+061:  );
+062:  // 트리뷰에 이미지 - 닫힘
+063:  private final Node rootIcon1 = new ImageView(
+064: 	new Image(getClass().getResourceAsStream("image/book1.png"))
+065:  );
+066:  @FXML
+067:  public void initialize () {
+068: 	loadTreeItems();
+069: 	empIdColumn.setCellValueFactory(
+070: 			cellData -> cellData.getValue().employeeIdProperty().asObject());
+071: 	empNameColumn.setCellValueFactory(
+072: 			cellData -> cellData.getValue().firstNameProperty());
+073: 	empLastNameColumn.setCellValueFactory(
+074: 			cellData -> cellData.getValue().lastNameProperty());
+075: 	empEmailColumn.setCellValueFactory(
+076: 			cellData -> cellData.getValue().emailProperty());
+077: 	empPhoneNumberColumn.setCellValueFactory(
+078: 			cellData -> cellData.getValue().phoneNumberProperty());
+079: 	empHireDateColumn.setCellValueFactory(
+080: 			cellData -> cellData.getValue().hireDateProperty());
+081: 	employeeTable.setOnMouseClicked(e ->{
+082: 	  if(employeeTable.getSelectionModel().getSelectedItem()!=null ){
+083: 		Employee user = 
+084: 				(Employee)employeeTable.getSelectionModel().getSelectedItem();
+085: 		showLabel(
+086: 		   user.getEmployeeId()+"  "+user.getFirstName()+" "+user.getLastName());
+087: 	  }
+088: 	});
+089:  }
+090:  void showLabel(String msg){
+091: 	lbhello.setText(msg);
+092: 	//lbhello.setStyle(null);
+093: 	String value=
+094: 	   "-fx-font-size: 12px;           "
+095: 	   +"-fx-font-family: 'Arial Black';    "
+096: 	   +"-fx-fill: #818181;                 "
+097: 	   +"-fx-effect: innershadow( three-pass-box ,"
+098: 	   +" rgba(0,50,255,0.7) , 6, 0.0 , 0 , 2 );";
+099: 	lbhello.setStyle("\t"+value);
+100:  }
+101:  void showViewError(String msg){
+102: 	lbhello.setText(msg);
+103: 	String value=
+104: 	   "-fx-font-size: 12px;           "
+105: 	   +"-fx-font-family: 'Arial Black';    "
+106: 	   +"-fx-fill: #818181;                 "
+107: 	   +"-fx-effect: innershadow( three-pass-box ,"
+108: 	   +" rgba(255,0,0,0.7) , 6, 0.0 , 0 , 2 );";
+109: 	lbhello.setStyle("\t"+value);
+110:  }
+111:  public  void makeDepTree(TreeItem<String> front,List<Department> dlists){
+112: 	for (Department dep: dlists) {
+113:           TreeItem<String> troots=new TreeItem<String>(EmpUtil.tname(dep));
+114:           front.getChildren().add(troots);
+115: 	}
+116:  }
+117:  @SuppressWarnings("unchecked")
+118:  public void loadTreeItems() {
+119:     ObservableList<Department> dlists=null;
+120:     TreeItem<String> root = new TreeItem<String>("부서별 직원",rootIcon0);
+121:     root.setExpanded(true);
+122: 	try {
+123: 		List<DepartmentDto> blist=employeeDAO.findAllDepartments();
+124: 		dlists=DepConvert.toObservProFromDto(blist);
+125: 	    makeDepTree(root,dlists);
+126: 	    tvEmp.setRoot(root);
+127: 	    // 트리뷰의 아이템을 선택하면 부서에 있는 부서원을 정보를 테이블뷰에 보인다.
+128: 	    tvEmp.getSelectionModel().selectedItemProperty()
+129: 	    .addListener((observable, oldValue, newValue) -> {
+130: 	        ObservableList<Employee> empData=FXCollections.emptyObservableList();
+131: 		  try {
+132: 			 String val="";
+133: 			 if(newValue !=null && newValue instanceof TreeItem<?>){
+134: 				 // 트리뷰에서 선택된 트리아이템의 부서이름을 가져온다.
+135: 				 val=EmpUtil.dep(((TreeItem<String>)newValue).getValue());
+136: 			 }
+137: 			 System.out.println("-----------------------------"+val);
+138: 			 // 부서이름으로 부서에 근무하는 부서원들을 리스트로 가져온다.
+139: 			 List<EmployeeDto> emplists=employeeDAO.findEmployeesByDepartName( val);
+140: 			 if(!(emplists==null || emplists.size()==0)){
+141: 				 empData = EmpConvert.toObservProFromDto(emplists);
+142: 			 }
+143: 			 String stsf=val+" 부서직원수: ";
+144: 			 showLabel(stsf+empData.size()+" 명");
+145: 			 // 테이블뷰에 해당 부서의 부서원들의 정보를  보인다.
+146: 			 showToTableEmployees(empData);
+147: 		  } catch (SQLException e) {	
+148: 		  }
+149: 	    });
+150: 	    // 트리뷰의 트리아이템을 펼친다.
+151: 	    root.addEventHandler(TreeItem.branchExpandedEvent(),eh->{
+152: 	    	System.out.println("expanded");
+153: 	    	root.setGraphic(rootIcon0);
+154: 	        loadTreeItems();  // 펼쳐질때 아이템에 해당하는 자식 아이템들을 보인다.
+155: 	    });
+156: 	    // 트리뷰의 트리아이템을 닫는다.
+157: 	    root.addEventHandler(TreeItem.branchCollapsedEvent(),eh->{
+158: 	    	System.out.println("collapsed");
+159: 	    	root.setGraphic(rootIcon1);
+160: 	    });
+161: 	} catch (SQLException e) {
+162: 		System.out.println(" emp tv :"+e);
+163: 	}
+164: }
+165:  // 모든 사원의 정보를 가져와서 중앙 테이블뷰에 붙인다. 
+166:  @FXML
+167:  private void searchEmployees(ActionEvent actionEvent) throws SQLException {
+168:     try {
+169:     	List<EmployeeDto> blist  = employeeDAO.findAllEmployees ();
+170:     	ObservableList<Employee> empData=EmpConvert.toObservProFromDto(blist);
+171:     	showToTableEmployees(empData);
+172:        showLabel("Employees 총 :"+empData.size()+"명");
+173:     } catch (SQLException e){
+174:         System.out.println("employeeDAO.findAllEmployees() 에서 예외 발생.\n" + e);
+175:         //throw e;
+176:     }
+177:  }
+178:  // 테이블뷰에 고객의 정보를 아이템즈으로 만들어 붙인다.
+179:  @FXML
+180:  private void showToTableEmployees (ObservableList<Employee> empData)  {
+181:     employeeTable.setItems(empData);
+182:  }
+183: }

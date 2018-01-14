@@ -1,0 +1,48 @@
+01: package kr.co.infopub.chapter.s182;
+02: 	
+03: import javafx.application.Application;
+04: import javafx.stage.Stage;
+05: import javafx.scene.Scene;
+06: import javafx.scene.layout.BorderPane;
+07: import javafx.fxml.FXMLLoader;
+08: 
+09: public class Main extends Application {
+10: 	
+11: 	private Stage primaryStage;
+12: 	private BorderPane root;
+13: 	
+14: 	@Override
+15: 	public void start(Stage primaryStage) {
+16: 		primaryStage.setTitle("Human Resouce Management System ver. 0.2");
+17: 		this.primaryStage=primaryStage;
+18:         //---------------소스 분리 시킴
+19: 		showHR();
+20: 	}
+21: 	
+22: 	public void showHR() {
+23: 		try {
+24: 			FXMLLoader loader = new FXMLLoader();
+25: 	        loader.setLocation(getClass().getResource("MainHrFX.fxml"));
+26: 	        root = (BorderPane) loader.load();
+27: 	        //MainHrFXController empcon=loader.getController();
+28: 	        //------여기에 소스 추가
+29: 			
+30: 			
+31: 	        //------여기에 소스 추가
+32: 			Scene scene = new Scene(root,1200,850);
+33: 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+34: 			primaryStage.setScene(scene);
+35: 			primaryStage.show();
+36: 			
+37: 			primaryStage.setOnCloseRequest(e -> {
+38: 	        	System.out.println("Close primaryStage !!!");
+39: 	        });
+40: 		} catch(Exception e) {
+41: 			e.printStackTrace();
+42: 		}
+43: 	}
+44: 
+45: 	public static void main(String[] args) {
+46: 		launch(args);
+47: 	}
+48: }

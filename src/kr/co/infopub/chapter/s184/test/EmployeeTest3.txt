@@ -1,0 +1,28 @@
+01: package kr.co.infopub.chapter.s184.test;
+02: 
+03: import java.sql.SQLException;
+04: import kr.co.infopub.chapter.s184.model.EmployeeDAO;
+05: // getTreeMaxLevel 계층형쿼리의 가장 큰 레벨
+06: public class EmployeeTest3 {
+07: 
+08: 	public static void main(String[] args) {
+09: 		EmployeeDAO employeeDAO=new EmployeeDAO();
+10: 		int max=-1;;
+11: 		try {
+12: 			max = employeeDAO.getTreeMaxLevel();
+13: 			System.out.println(max);
+14: 		} catch (SQLException e) {
+15: 			System.out.println(e);
+16: 		}
+17: 		 
+18: 	}
+19: }
+20: /*
+21: CRUD-------------------------------class sample.model.EmployeeDAO.getTreeMaxLevel()
+22: SELECT MAX(LEVEL) 
+23:   FROM EMPLOYEES 
+24:   START WITH  MANAGER_ID  IS NULL 
+25:   CONNECT BY PRIOR  EMPLOYEE_ID = MANAGER_ID
+26: CRUD--------------------------------------2017-05-13 20:50
+27: 5
+28: */

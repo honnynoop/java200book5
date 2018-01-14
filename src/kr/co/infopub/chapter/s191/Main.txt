@@ -1,0 +1,56 @@
+01: package kr.co.infopub.chapter.s191;
+02: import javafx.application.Application;
+03: import javafx.stage.Stage;
+04: import kr.co.infopub.chapter.s191.model.EmployeeService;
+05: import javafx.scene.Scene;
+06: import javafx.scene.layout.BorderPane;
+07: import javafx.fxml.FXMLLoader;
+08: public class Main extends Application {
+09:  private Stage primaryStage;
+10:  private BorderPane root;
+11:  String systemver="HR Information System ver.1.0";
+12:  @Override
+13:  public void start(Stage primaryStage) {
+14: 	primaryStage.setTitle(systemver);
+15: 	this.primaryStage=primaryStage;
+16:     //---------------소스 분리 시킴
+17: 	showHR();
+18:  }
+19:  public void showHR() {
+20:   try {
+21: 	// DAO 대신 Serivce 사용 -> ObservableList 변환도 같이 함
+22: 	EmployeeService service=EmployeeService.getInstance(); //DB 준비
+23: 	FXMLLoader loader = new FXMLLoader();
+24:     loader.setLocation(Main.class.getResource("view/MainHrFX.fxml"));
+25:     root = (BorderPane) loader.load();
+26:     MainHrFXController empcon=loader.getController();
+27:     //------>>>여기에 소스 추가
+28:     DepartmentController departView=new DepartmentController(service);
+29:     ManagerFxController emptvView=new ManagerFxController(service);
+30:     EmployeeSearchFxController empsearchView=new EmployeeSearchFxController(service);      
+31:     EmployUpdateFxController empupdateView=new EmployUpdateFxController(service); 
+32:     PieChartController piecharview=new PieChartController(service); 
+33:     
+34:     empcon.setView1(departView);
+35:     empcon.setView2(emptvView);
+36:     empcon.setView(empsearchView);
+37:     empcon.setView3(empupdateView);
+38:     empcon.setView4(piecharview);
+39:     //<<<------여기에 소스 추가
+40: 	Scene scene = new Scene(root,1250,880);
+41: 	scene.getStylesheets().add(
+42: 	Main.class.getResource("view/application.css").toExternalForm());
+43: 	primaryStage.setScene(scene);
+44: 	primaryStage.show();
+45: 	primaryStage.setResizable(false);
+46: 	primaryStage.setOnCloseRequest(e -> {
+47:     	System.out.println("Close primaryStage !!!");
+48:     });
+49:   } catch(Exception e) {
+50: 	System.out.println(" start에서 Error : "+e);
+51:   }
+52:  }
+53:  public static void main(String[] args) {
+54: 	launch(args);
+55:  }
+56: }

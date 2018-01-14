@@ -1,0 +1,87 @@
+01: package kr.co.infopub.chapter.s188;
+02: import java.sql.SQLException;
+03: import java.util.List;
+04: import javafx.application.Application;
+05: import javafx.collections.FXCollections;
+06: import javafx.collections.ObservableList;
+07: import javafx.scene.Group;
+08: import javafx.scene.Scene;
+09: import javafx.scene.chart.PieChart.Data;
+10: import javafx.scene.control.Label;
+11: import javafx.scene.input.MouseEvent;
+12: import javafx.stage.Stage;
+13: import kr.co.infopub.chapter.s185.dto.DepCount;
+14: import kr.co.infopub.chapter.s185.dto.DepCountConvert;
+15: import kr.co.infopub.chapter.s185.dto.DepCountDto;
+16: import kr.co.infopub.chapter.s185.model.EmployeeDAO;
+17: import kr.co.infopub.chapter.s185.util.EmpUtil;
+18: import kr.co.infopub.chapter.s185.util.PTS;
+19: import javafx.scene.chart.PieChart;
+20: public class DepChartFx extends Application {
+21:  int total=0;   // 전체 사원 수
+22:  private ObservableList<Data> getChartData(List<DepCount> dlists) {
+23:     ObservableList<Data> answer = FXCollections.observableArrayList();
+24:     for (DepCount dc: dlists) {
+25:     	// 부서이름(부서아이디), 부서원 수
+26:     	 answer.add(new PieChart.Data( dc.getDepartment_name()
+27:     			   +"("+dc.getDepartment_id()+")", dc.getCount()  ));
+28: 	}
+29:     return answer;
+30:  }
+31:  @Override
+32:  public void start(Stage stage) {
+33:   EmployeeDAO employeeDAO=new EmployeeDAO();
+34:   try {
+35:     List<DepCountDto> bdlists=employeeDAO.findAllDepCounts();;
+36:     List<DepCount> dlists =DepCountConvert.toObservProFromDto(bdlists);
+37:     // 부서별 인원을 더해서 전체 사원수를 구한다.
+38:     for(DepCount dc: dlists){
+39: 	    total+=dc.getCount();
+40:     }
+41:     Scene scene = new Scene(new Group());
+42:     stage.setTitle("부서별 인원수 " +PTS.toDay());
+43:     stage.setWidth(750);
+44:     stage.setHeight(800);
+45: 	
+46: 	PieChart pieChart = new PieChart();
+47: 	pieChart.setTitle("부서별 인원수 총"+total+"명");
+48: 	// 파이차트에  ObservableList를 대입한다
+49: 	// 부서별 부서원 수로 파이 넓이를 차지한다.
+50:     pieChart.setData(getChartData(dlists));
+51:     pieChart.setClockwise(true); 
+52:     pieChart.setStartAngle(180);  
+53:     pieChart.setLabelsVisible(true); 
+54:     //레전드
+55:     //pieChart.setLabelLineLength(20);
+56:     //pieChart.setLegendSide(Side.LEFT);
+57:     pieChart.setPrefWidth(750);
+58:     pieChart.setPrefHeight(700); 
+59:     final Label caption = new Label("");
+60:     String value=
+61: 	    	   "-fx-font-size: 25px;           "
+62: 	    	  +"-fx-font-family: 'Arial Black';    ";
+63:     caption.setStyle(value);
+64:     for (final PieChart.Data data : pieChart.getData()) {
+65:         data.getNode().addEventHandler(MouseEvent.MOUSE_PRESSED,
+66:             e-> {
+67:                 caption.setTranslateX(e.getSceneX());  // 마우스로 누른 X위치에
+68:                 caption.setTranslateY(e.getSceneY());  // 마우스로 누른 Y위치에
+69:                 String sft=String.format("%s %.2f%%(%.0f명)", 
+70:                 		EmpUtil.dep(data.getName()),   // 부서이름
+71:                 		100*data.getPieValue()/total,  // 부서인원 %비율
+72:                 		data.getPieValue());           // 부서인원
+73:                 caption.setText(sft);
+74:             });
+75:     }
+76:     // 파이차트와 이벤트 발생시 보일 내용(라벨)
+77:     ((Group) scene.getRoot()).getChildren().addAll(pieChart,caption);
+78:     stage.setScene(scene);
+79:     stage.show();
+80:   } catch (SQLException e) {
+81: 	System.out.println(e);
+82:   }
+83:  }
+84:  public static void main(String[] args) {
+85:   launch(args);
+86:  }
+87: }

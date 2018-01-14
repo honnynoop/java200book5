@@ -1,0 +1,33 @@
+01: <?xml version="1.0" encoding="UTF-8"?>
+02: 
+03: <?import javafx.scene.control.*?>
+04: <?import java.lang.*?>
+05: <?import javafx.scene.layout.*?>
+06: <?import javafx.scene.layout.BorderPane?>
+07: 
+08: <BorderPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kr.co.infopub.chapter.s187.EmpTableFxController">
+09:    <center>
+10:       <BorderPane prefHeight="760" prefWidth="800" BorderPane.alignment="CENTER">
+11:            <center>
+12:               <TableView fx:id="employeeTable" editable="true" prefHeight="676.0" prefWidth="870.0" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
+13:                 <columns>
+14:                     <TableColumn fx:id="empIdColumn" prefWidth="100" text="EmployeeID" />
+15:                   <TableColumn fx:id="empNameColumn" prefWidth="150" text="FirstName" />
+16:                   <TableColumn fx:id="empLastNameColumn" prefWidth="150" text="LastName" />
+17:                     <TableColumn fx:id="empEmailColumn" prefWidth="150" text="Email" />
+18:                     <TableColumn fx:id="empPhoneNumberColumn" prefWidth="150" text="Phone" />
+19:                     <TableColumn fx:id="empHireDateColumn" prefWidth="150" text="Hire Date" />
+20:                 </columns>
+21:               </TableView>
+22:            </center>
+23:         </BorderPane>
+24:    </center>
+25:    <bottom>
+26:       <AnchorPane prefHeight="40.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+27:      	   <children>
+28: 	           <Label fx:id="lbhello" layoutX="333.0" layoutY="8.0" prefHeight="30.0" prefWidth="850.0" />
+29: 	           <Button fx:id="searchEmpsBtn" layoutX="14.0" layoutY="6.0" mnemonicParsing="false" onAction="#searchEmployees" prefHeight="30.0" prefWidth="305.0" text="Search All Employees" />
+30:            </children>
+31:       </AnchorPane>
+32:    </bottom>
+33: </BorderPane>

@@ -1,0 +1,63 @@
+01: package kr.co.infopub.chapter.s185;
+02: import java.sql.SQLException;
+03: import java.util.List;
+04: import javafx.application.Application;
+05: import javafx.geometry.Insets;
+06: import javafx.scene.Scene;
+07: import javafx.scene.control.Label;
+08: import javafx.scene.control.TreeItem;
+09: import javafx.scene.control.TreeView;
+10: import javafx.scene.layout.BorderPane;
+11: import javafx.stage.Stage;
+12: import kr.co.infopub.chapter.s185.dto.DepConvert;
+13: import kr.co.infopub.chapter.s185.dto.Department;
+14: import kr.co.infopub.chapter.s185.dto.DepartmentDto;
+15: import kr.co.infopub.chapter.s185.model.EmployeeDAO;
+16: import kr.co.infopub.chapter.s185.util.EmpUtil;
+17: public class DepTreeFx extends Application {
+18: EmployeeDAO employeeDAO=new EmployeeDAO();
+19: 
+20: public  void makeDepTree(TreeItem<String> front,List<Department> dlists){
+21: 	for (Department dep: dlists) {
+22: 	          TreeItem<String> troots=new TreeItem<String>(EmpUtil.tname(dep));
+23: 	          front.getChildren().add(troots);
+24: 	}
+25: }	
+26: @Override
+27: public void start(Stage stage) {
+28:   BorderPane vbox=new BorderPane();
+29:   vbox.setPadding(new Insets(10, 10, 10, 10));
+30:   try {	
+31: 	// 사원이 있는 부서와 아직 발령받지 사원(NOTYET)
+32: 	List<DepartmentDto> blist  = employeeDAO.findAllDepartments ();
+33: 	// JavaFX TreeItem을 위한 리스트로 변환
+34: 	List<Department> dlists=DepConvert.toObservProFromDto(blist);
+35: 	// 부서 아이템
+36: 	TreeItem<String> root = new TreeItem<String>("부서");
+37: 	// 부서 아이템에 부서들 붙이기
+38: 	makeDepTree(root,dlists);
+39: 	// 트리뷰에 트리아이템 붙이기
+40: 	TreeView<String> treeView = new TreeView<String>(root);
+41: 	
+42: 	root.setExpanded(true);
+43: 	vbox.setCenter(treeView);
+44: 	Label label = new Label("                          ");
+45: 	vbox.setBottom(label);
+46: 	Scene scene = new Scene(vbox, 400, 800);
+47: 	stage.setScene(scene);
+48: 	stage.setTitle("Human Resouce Management System ver. 0.2");
+49: 	stage.show();
+50: 	// 트리뷰의 한 아이템을 선택하면 선택된 아이템의 정보를 화면 하단에 출력
+51: 	treeView.getSelectionModel().selectedItemProperty()
+52: 	.addListener( (observable, oldValue, newValue) -> {
+53: 		String name =newValue.getValue();
+54: 		label.setText(   EmpUtil.dep(name));
+55: 		});
+56:    } catch (SQLException e) {
+57: 		System.out.println(e);
+58:    }
+59:  }
+60:  public static void main(String[] args) {
+61:    launch(args);
+62:  }
+63: }

@@ -1,0 +1,77 @@
+01: package kr.co.infopub.chapter.s181;
+02: import java.sql.Date;
+03: import java.text.ParseException;
+04: import java.text.SimpleDateFormat;
+05: public class PTS {
+06:  // java.sql.Date -> "yyyy. MM. dd" 
+07:  public static String toSDate(Date msg){
+08: 	SimpleDateFormat sdf=new SimpleDateFormat("yyyy. MM. dd");
+09: 	return sdf.format(msg);
+10:  }
+11:  // "yyyy. MM. dd" -> java.sql.Date
+12:  public static Date toDaeS(String msg){
+13: 	SimpleDateFormat sdf=new SimpleDateFormat("yyyy. MM. dd");
+14: 	java.util.Date ud=new java.util.Date();
+15: 	try {
+16: 		ud=sdf.parse(msg);
+17: 	} catch (ParseException e) {
+18: 	}
+19:    return new Date(ud.getTime());
+20:  }
+21:  // java.sql.Date -> "yyyy-MM-dd" 
+22:  public static String toSDate2(Date msg){
+23: 	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+24: 	return sdf.format(msg);
+25:  }
+26:  // java.util.Date -> "yyyy-MM-dd" 
+27:  public static String toDate3(java.util.Date msg){
+28: 	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+29: 	return sdf.format(msg);
+30:  }
+31:  // today -> "yyyy-MM-dd" 
+32:  public static String toDay(){
+33: 	return toDate3(new java.util.Date());
+34:  }
+35:  // "yyyy-MM-dd" -> java.sql.Date
+36:  public static Date toDaeS2(String msg){
+37: 	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+38: 	java.util.Date ud=new java.util.Date();
+39: 	try {
+40: 		ud=sdf.parse(msg);
+41: 	} catch (ParseException e) {
+42: 		
+43: 	}
+44:    return new Date(ud.getTime());
+45:  }
+46:  // "     " -> \n 10칸 공백 -> 다음 줄
+47:  public static  void log(String msg){
+48: 	String[] mmm=msg.split("     ");
+49: 	String ss="";
+50: 	for (int i = 0; i < mmm.length; i++) {
+51: 		if(mmm[i]!=null && !mmm[i].trim().equals("")){
+52: 			ss+= ""+mmm[i].trim()+" \n ";
+53: 		}
+54: 	}
+55: 	System.out.println("--------------");
+56: 	System.out.println(ss.trim());
+57: 	System.out.println("-------------");
+58:  }//
+59:  // id=? -> id='101'
+60:  public static String  log2(String msg, String id){
+61: 	String sms=msg.replace("?", "%s");
+62: 	String ss=String.format(sms, "'"+id+"'");
+63: 	return ss;
+64:  }
+65:  public static void main(String[] args) {
+66: 	Date s=toDaeS("2017. 5. 12");
+67: 	String t=toSDate2(s);
+68: 	System.out.println(t);
+69:     String SQL = ""
+70:     		+" SELECT EMPLOYEE_ID, FIRST_NAME, LAST_NAME,                "
+71:     		+" EMAIL,PHONE_NUMBER,HIRE_DATE FROM EMPLOYEES               "
+72:     		+" START WITH  EMPLOYEE_ID =?                                "
+73:     		+" CONNECT BY PRIOR EMPLOYEE_ID = MANAGER_ID";
+74: 	log(SQL);
+75: 	log(log2(SQL,"100"));
+76:  }
+77: }

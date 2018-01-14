@@ -1,0 +1,147 @@
+001: package kr.co.infopub.chapter.s183.model;
+002: import kr.co.infopub.chapter.s183.dto.DepCountDto;
+003: import kr.co.infopub.chapter.s183.dto.DepartmentDto;
+004: import java.sql.Connection;
+005: import java.sql.PreparedStatement;
+006: import java.sql.ResultSet;
+007: import java.sql.SQLException;
+008: import java.util.ArrayList;
+009: import java.util.List;
+010: public class EmployeeDAO extends DataBase{
+011:  // 모든 사원의 수	
+012:  public  int getEmployeesTotal () throws SQLException {
+013:     String SQL = " SELECT COUNT(*) FROM EMPLOYEES ";
+014:     Connection conn=null;
+015:     PreparedStatement psmt=null;
+016:     ResultSet rs=null;
+017:     int count=0;
+018:     try {
+019:         conn=getConnection();
+020:         psmt=conn.prepareStatement(SQL);
+021:         log("3/6 getEmployeesTotal Success!!!");
+022:         log(SQL,"getEmployeesTotal");
+023:         rs =psmt.executeQuery();
+024:         log("4/6 getEmployeesTotal Success!!!");
+025:         if (rs.next()) {
+026:             count=rs.getInt(1);  
+027:         }
+028:         log("5/6 getEmployeesTotal Success!!!");
+029:     } catch (SQLException e) {
+030:     	log(" getEmployeesTotal Error!!!",e);
+031:     }finally{
+032:     	close(conn, psmt, rs);
+033:     }
+034:     return count;
+035:  }
+036:  // 사원이 있는 부서만, 부서를 발령받지 못한 사원 NOTYET
+037:  public  List<DepartmentDto> findAllDepartments () throws SQLException {
+038: 	 String SQL=""+
+039: 	  " SELECT NVL(E.DEPARTMENT_ID,0) DEPARTMENT_ID, "
+040: 	 +" NVL(D.DEPARTMENT_NAME,'NOTYET') DEPARTMENT_NAME            "
+041: 	 +" FROM EMPLOYEES E, DEPARTMENTS D            "
+042: 	 +" WHERE E.DEPARTMENT_ID=D.DEPARTMENT_ID(+)            " 
+043: 	 +" GROUP BY E.DEPARTMENT_ID, D.DEPARTMENT_NAME            "
+044: 	 +" ORDER BY E.DEPARTMENT_ID            ";
+045: 	
+046: 	Connection conn=null;
+047: 	PreparedStatement psmt=null;
+048: 	ResultSet rs=null;
+049: 	List<DepartmentDto> empList = new ArrayList<>();
+050: 	try {
+051: 		 conn=getConnection();
+052: 	     psmt=conn.prepareStatement(SQL);
+053: 	     log(SQL,"findAllDepartments");
+054: 	     log("3/6 findAllDepartments Success!!!");
+055: 	     rs =psmt.executeQuery();
+056: 	     log("4/6 findAllDepartments Success!!!");
+057: 	     while (rs.next()) {
+058: 	    	 DepartmentDto emp = new DepartmentDto();
+059: 	         emp.setDepartment_id(rs.getInt("DEPARTMENT_id"));
+060: 	         emp.setDepartment_name(rs.getString("DEPARTMENT_name"));
+061: 	         empList.add(emp);
+062: 	     }
+063: 	     log("5/6 findAllDepartments Success!!!");
+064: 	} catch (SQLException e) {
+065: 		log(" findAllDepartments Error!!!",e);
+066:     }finally{
+067:     	close(conn, psmt, rs);
+068:     }
+069:     return empList;
+070:  }
+071:  // 부서가 없는 사원을 포함하여 모든 부서
+072:  public  List<DepartmentDto> findAllDepartments2 () throws SQLException {
+073: 	 //부서가 없는 사원도 포함
+074:     String SQL=""+
+075: 	 " SELECT  NVL(D.DEPARTMENT_ID,0) DEPARTMENT_ID,            "
+076: 	+" NVL(D.DEPARTMENT_NAME,'NOTYET') DEPARTMENT_NAME         "
+077: 	+" FROM EMPLOYEES E FULL OUTER JOIN  DEPARTMENTS D         "
+078: 	+" ON E.DEPARTMENT_ID=D.DEPARTMENT_ID                      "
+079: 	+" GROUP BY D.DEPARTMENT_ID,D.DEPARTMENT_NAME              "
+080: 	+" ORDER BY D.DEPARTMENT_ID                                ";
+081: 	// 부서가 없는 사원 불포함  
+082: /*    String SQL=""+
+083: 	 " SELECT  NVL(D.DEPARTMENT_ID,0) DEPARTMENT_ID,           "
+084: 	+" NVL(D.DEPARTMENT_NAME,'NOTYET') DEPARTMENT_NAME         "
+085: 	+" FROM DEPARTMENTS D              ";
+086: */
+087:     Connection conn=null;
+088:     PreparedStatement psmt=null;
+089:     ResultSet rs=null;
+090:     List<DepartmentDto> empList = new ArrayList<>();
+091:     try {
+092:     	 conn=getConnection();
+093:          psmt=conn.prepareStatement(SQL);
+094:          log(SQL,"findAllDepartments");
+095:          log("3/6 findAllDepartments Success!!!");
+096:          rs =psmt.executeQuery();
+097:          log("4/6 findAllDepartments Success!!!");
+098:          while (rs.next()) {
+099:         	 DepartmentDto emp = new DepartmentDto();
+100:              emp.setDepartment_id(rs.getInt("DEPARTMENT_id"));
+101:              emp.setDepartment_name(rs.getString("DEPARTMENT_name"));
+102:              empList.add(emp);
+103:          }
+104:          log("5/6 findAllDepartments Success!!!");
+105:     } catch (SQLException e) {
+106:     	log(" findAllDepartments Error!!!",e);
+107:     }finally{
+108:     	close(conn, psmt, rs);
+109:     }
+110:     return empList;
+111:  }
+112:  // 부서원이 있는 부서와 부서원의 수
+113:  public  List<DepCountDto> findAllDepCounts () throws SQLException {
+114:     String SQL = ""
+115:  +" SELECT COUNT(*) COUNT, NVL(E.DEPARTMENT_ID,0) DEPARTMENT_ID,        "
+116:  +"         NVL(D.DEPARTMENT_NAME,'NOTYET') DEPARTMENT_NAME             "
+117:  +" FROM EMPLOYEES E, DEPARTMENTS D                                     "
+118:  +" WHERE E.DEPARTMENT_ID=D.DEPARTMENT_ID(+)                            "
+119:  +" GROUP BY E.DEPARTMENT_ID, D.DEPARTMENT_NAME                         "
+120:  +" ORDER BY COUNT DESC,E.DEPARTMENT_ID ASC                             ";
+121:     Connection conn=null;
+122:     PreparedStatement psmt=null;
+123:     ResultSet rs=null;
+124:     List<DepCountDto> empList = new ArrayList<>();
+125:     try {
+126:     	 conn=getConnection();
+127:          psmt=conn.prepareStatement(SQL);
+128:          log("3/6 findAllDepCounts Success!!!");
+129:          log(SQL,"findAllDepCounts");
+130:          rs =psmt.executeQuery();
+131:          log("4/6 findAllDepCounts Success!!!");
+132:          while (rs.next()) {
+133:         	 DepCountDto emp = new DepCountDto();
+134:              emp.setCount(rs.getInt("COUNT"));
+135:              emp.setDepartment_id(rs.getInt("DEPARTMENT_ID"));
+136:              emp.setDepartment_name(rs.getString("DEPARTMENT_NAME"));
+137:              empList.add(emp);
+138:          }
+139:          log("5/6 findAllDepCounts Success!!!");
+140:     } catch (SQLException e) {
+141:     	log(" findAllDepCounts Error !!!",e);
+142:     }finally{
+143:     	close(conn, psmt, rs);
+144:     }
+145:     return empList;
+146:  }
+147: }

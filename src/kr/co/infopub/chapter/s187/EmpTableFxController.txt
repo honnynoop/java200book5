@@ -1,0 +1,106 @@
+001: package kr.co.infopub.chapter.s187;
+002: import java.sql.Date;
+003: import java.sql.SQLException;
+004: import java.util.List;
+005: 
+006: import javafx.beans.value.ObservableValue;
+007: import javafx.collections.ObservableList;
+008: import javafx.event.ActionEvent;
+009: import javafx.event.Event;
+010: import javafx.event.EventHandler;
+011: import javafx.fxml.FXML;
+012: import javafx.scene.control.Button;
+013: import javafx.scene.control.Label;
+014: import javafx.scene.control.TableColumn;
+015: import javafx.scene.control.TableView;
+016: import javafx.scene.control.TableColumn.CellDataFeatures;
+017: import javafx.util.Callback;
+018: import kr.co.infopub.chapter.s185.dto.EmpConvert;
+019: import kr.co.infopub.chapter.s185.dto.Employee;
+020: import kr.co.infopub.chapter.s185.dto.EmployeeDto;
+021: import kr.co.infopub.chapter.s185.model.EmployeeDAO;
+022: public class EmpTableFxController {
+023:  @FXML
+024:  private TableView<Employee> employeeTable;
+025:  @FXML
+026:  private TableColumn<Employee, Integer>  empIdColumn;
+027:  @FXML
+028:  private TableColumn<Employee, String>  empNameColumn;
+029:  @FXML
+030:  private TableColumn<Employee, String> empLastNameColumn;
+031:  @FXML
+032:  private TableColumn<Employee, String> empEmailColumn;
+033:  @FXML
+034:  private TableColumn<Employee, String> empPhoneNumberColumn;
+035:  @FXML
+036:  private TableColumn<Employee, Date> empHireDateColumn;
+037:  @FXML
+038:  private Button searchEmpsBtn;
+039:  @FXML
+040:  private Label lbhello;
+041: 
+042:  EmployeeDAO employeeDAO=new EmployeeDAO();
+043:  
+044:  void showLabel(String msg){
+045: 	lbhello.setText(msg);
+046: 	String value=
+047: 	    	   "-fx-font-size: 12px;           "
+048: 	    	   +"-fx-font-family: 'Arial Black';    "
+049: 	    	   +"-fx-fill: #818181;                 "
+050: 	    	   +"-fx-effect: innershadow( three-pass-box ,"
+051: 	    	   +" rgba(0,50,255,0.7) , 6, 0.0 , 0 , 2 );";
+052: 	    	lbhello.setStyle("\t"+value);
+053:  }
+054:  private void showToTableEmployees (ObservableList<Employee> empData)  {
+055:     employeeTable.setItems(empData);
+056:  }
+057:  @FXML
+058:  void initialize() {
+059: 	// 칼럼과 매핑, Callback -> call을 구현해야함
+060: /*	empIdColumn.setCellValueFactory(
+061: 		      new Callback<TableColumn.CellDataFeatures<Employee,Integer>,
+062: 			                                 ObservableValue<Integer>>() {
+063: 		@Override
+064: 		public ObservableValue<Integer> call(
+065: 				           CellDataFeatures<Employee, Integer> cellData) {
+066: 			return cellData.getValue().employeeIdProperty().asObject();
+067: 		}
+068: 	});*/
+069: 	empIdColumn.setCellValueFactory(
+070: 	cellData -> cellData.getValue().employeeIdProperty().asObject());
+071: 	empNameColumn.setCellValueFactory(
+072: 			cellData -> cellData.getValue().firstNameProperty());
+073: 	empLastNameColumn.setCellValueFactory(
+074: 			cellData -> cellData.getValue().lastNameProperty());
+075: 	empEmailColumn.setCellValueFactory(
+076: 			cellData -> cellData.getValue().emailProperty());
+077: 	empPhoneNumberColumn.setCellValueFactory(
+078: 			cellData -> cellData.getValue().phoneNumberProperty());
+079: 	empHireDateColumn.setCellValueFactory(
+080: 			cellData -> cellData.getValue().hireDateProperty());
+081: 	// 데이블의 행을 선택하면 한 줄 이벤트가 발생한다.
+082: 	employeeTable.setOnMouseClicked(e ->{
+083: 	 if(employeeTable.getSelectionModel().getSelectedItem()!=null ){
+084: 	  Employee user =
+085: 		(Employee)employeeTable.getSelectionModel().getSelectedItem();
+086:       showLabel(
+087:         user.getEmployeeId()+" "+user.getFirstName()+" "+user.getLastName());
+088: 	 }
+089:     });
+090:  }
+091:  @FXML
+092:  private void searchEmployees(ActionEvent actionEvent) throws SQLException {
+093:     try {
+094:     	// 모든 사원 가져오기
+095:     	List<EmployeeDto> emplists=employeeDAO.findAllEmployees();
+096:     	// JavaFX 테이블용 리스트로 변환
+097:         ObservableList<Employee> 
+098:                           empData = EmpConvert.toObservProFromDto(emplists);
+099:         // 테이블에 보여주기
+100:         showToTableEmployees(empData);
+101:         showLabel("Employees 총 :"+empData.size()+"명");
+102:     } catch (SQLException e){
+103:         System.out.println("employeeDAO.findAllEmployees() 에서 예외 발생.\n" + e);
+104:     }
+105:  }
+106: }

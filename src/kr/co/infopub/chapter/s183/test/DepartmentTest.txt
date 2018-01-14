@@ -1,0 +1,21 @@
+01: package kr.co.infopub.chapter.s183.test;
+02: import java.sql.SQLException;
+03: import java.util.List;
+04: import kr.co.infopub.chapter.s183.dto.DepartmentDto;
+05: import kr.co.infopub.chapter.s183.model.EmployeeDAO;
+06: import kr.co.infopub.chapter.s183.util.EmpUtil;
+07: public class DepartmentTest {
+08:  public static void main(String[] args) {
+09: 	EmployeeDAO ddao=new EmployeeDAO();
+10: 	try {
+11: 		List<DepartmentDto> lists=ddao.findAllDepartments();
+12: 		System.out.println("Results-----------");
+13: 		for (DepartmentDto dd: lists) {
+14: 			System.out.println(EmpUtil.tname(dd));
+15: 		}
+16: 		System.out.printf("직원이 있는 부서 수 : %d개\n",lists.size());
+17: 	} catch (SQLException e) {
+18: 		System.out.println( e);
+19: 	}
+20:  }
+21: }

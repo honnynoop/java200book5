@@ -1,0 +1,59 @@
+01: package kr.co.infopub.chapter.s184.test;
+02: 
+03: import java.sql.SQLException;
+04: import java.util.List;
+05: 
+06: import javafx.scene.control.TreeItem;
+07: import kr.co.infopub.chapter.s184.dto.EmployeeDto;
+08: import kr.co.infopub.chapter.s184.model.EmployeeDAO;
+09: import kr.co.infopub.chapter.s184.util.EmpUtil;
+10: 
+11: public class EmployeeTest5 {
+12: 	public static void main(String[] args) {
+13: 		EmployeeDAO ddao=new EmployeeDAO();
+14: 		try {
+15: 			List<EmployeeDto> lists=ddao.findTreeManagerInEmployee();
+16: 			TreeItem<String> root = new TreeItem<String>("매니저와 직원");
+17: 			int max=ddao.getTreeMaxLevel();
+18: 			makeEmpTree(root,lists,"",1,max);
+19: 			printTree(root, 1);
+20: 			
+21: 		} catch (SQLException e) {
+22: 			System.out.println( e);
+23: 		}
+24: 	}
+25: 	//재귀를 이용
+26: 	public static void makeEmpTree(TreeItem<String> front,List<EmployeeDto> dlists, String key, int index,int max){
+27: 		if(index>max){return ; }  //max를 넘으면 끝
+28: 		for (EmployeeDto emp: dlists) {  //개수가 있으니 끝날 것이다.
+29: 			if(EmpUtil.level(emp)!=index){   //원하는 레벨만 찾음
+30: 				continue;
+31: 			}else if(index>1 && EmpUtil.level(emp)==index){   //2부터는 1의 키값과 비교
+32: 				if(EmpUtil.level(emp,index-1).equals(key)){
+33: 					TreeItem<String> aa=new TreeItem<String>(EmpUtil.tname(emp, index));
+34: 					front.getChildren().add(aa);
+35: 					makeEmpTree(aa,dlists,EmpUtil.level(emp,index),index+1,max);
+36: 				}else{
+37: 					continue;
+38: 				}
+39: 			}else if(EmpUtil.level(emp)==1){  //1의 키값이 없기 때문
+40: 				TreeItem<String> aa=new TreeItem<String>(EmpUtil.tname(emp, 1));
+41: 				front.getChildren().add(aa);
+42: 				makeEmpTree(aa,dlists,EmpUtil.level(emp,1),2,max);
+43: 			}
+44: 		}
+45: 	}	
+46: 	public static void printTree(TreeItem<String> root , int index){
+47:     	String tt="\t";
+48:     	String s="";
+49:     	for(int i=1; i<index ; i++){
+50:     		s+=tt;
+51:     	}
+52:     	//System.out.println(s+""+index+" "+root.getValue());
+53:     	System.out.println(s+""+root.getValue());
+54:     	for(TreeItem<String> ss:root.getChildren()){
+55:     		printTree(ss, index+1);
+56:     	}
+57:     }
+58: 	
+59: }

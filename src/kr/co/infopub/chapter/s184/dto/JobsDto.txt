@@ -1,0 +1,29 @@
+01: package kr.co.infopub.chapter.s184.dto;
+02: public class JobsDto {
+03: 	private String job_id;
+04: 	private String job_title;
+05: 	public JobsDto() {
+06: 		super();
+07: 	}
+08: 	public JobsDto(String job_id, String job_title) {
+09: 		super();
+10: 		this.job_id = job_id;
+11: 		this.job_title = job_title;
+12: 	}
+13: 	@Override
+14: 	public String toString() {
+15: 		return "JobsDto [job_id=" + job_id + ", job_title=" + job_title + "]";
+16: 	}
+17: 	public String getJob_id() {
+18: 		return job_id;
+19: 	}
+20: 	public void setJob_id(String job_id) {
+21: 		this.job_id = job_id;
+22: 	}
+23: 	public String getJob_title() {
+24: 		return job_title;
+25: 	}
+26: 	public void setJob_title(String job_title) {
+27: 		this.job_title = job_title;
+28: 	}
+29: }

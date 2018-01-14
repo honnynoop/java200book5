@@ -1,0 +1,84 @@
+01: package kr.co.infopub.chapter.s182;
+02: import java.util.Date;
+03: import java.util.Optional;
+04: import javafx.application.Platform;
+05: import javafx.event.ActionEvent;
+06: import javafx.fxml.FXML;
+07: import javafx.scene.control.Alert;
+08: import javafx.scene.control.Alert.AlertType;
+09: import javafx.scene.control.ButtonType;
+10: import javafx.scene.control.MenuItem;
+11: import javafx.scene.control.Tab;
+12: import javafx.scene.control.TabPane;
+13: import javafx.scene.layout.BorderPane;
+14: public class MainHrFXController {
+15:  @FXML
+16:  private MenuItem menuDepart;
+17:  @FXML
+18:  private MenuItem menuManage;
+19:  @FXML
+20:  private MenuItem menuSearch;
+21:  @FXML
+22:  private MenuItem menuUpdate;
+23:  @FXML
+24:  private MenuItem menuChart;
+25:  @FXML
+26:  private TabPane mainTabPane;
+27:  @FXML
+28:  private Tab tab3;
+29:  @FXML
+30:  private Tab tab1;
+31:  @FXML
+32:  private Tab tab2;
+33:  @FXML
+34:  private Tab tab4;
+35:  @FXML
+36:  private Tab tab5;
+37:  @FXML
+38:  private BorderPane searchTabBorder;
+39:  @FXML
+40:  private BorderPane empTabBorder;
+41:  @FXML
+42:  private BorderPane depChartBorder;
+43:  @FXML
+44:  private BorderPane debTabBorder;
+45:  @FXML
+46:  private BorderPane updateTabBorder;
+47:  String systemver="HR Information Syste ver.0.2";
+48:  @FXML
+49:  void onStartAction(ActionEvent event) {
+50: 	  Alert alert = new Alert (Alert.AlertType.INFORMATION);
+51:       alert.setTitle(systemver);
+52:       alert.setHeaderText("인사관리 시스템 "+PTS.toDate3(new Date()));
+53:       alert.setContentText(
+54:     		  "인사관리시스템은 부서관리, 관리자관리, 인사에 관련된 입력/수정을 하는 시스템입니다.");
+55:       alert.show();
+56:       mainTabPane.setVisible(true);    
+57:  }
+58:  @FXML
+59:  void onExitAction(ActionEvent event) {
+60: 	Alert alert = new Alert(AlertType.CONFIRMATION);
+61: 	alert.setTitle(systemver);
+62:     alert.setHeaderText("인사관리 시스템("+PTS.toDate3(new Date())+")을 끝내시겠습니까?");
+63: 	alert.setContentText("정말 끝내시겠습니까?");
+64: 	Optional<ButtonType> result = alert.showAndWait();
+65: 	if (result.get() == ButtonType.OK){
+66: 		Platform.exit();
+67: 		//System.exit(0);
+68: 	} else return;
+69:  }
+70:  @FXML
+71:  void onHelpAction(ActionEvent event) {
+72: 	  Alert alert = new Alert (Alert.AlertType.INFORMATION);
+73:       alert.setTitle(systemver);
+74:       alert.setHeaderText("인사관리 시스템 "+PTS.toDate3(new Date()));
+75:       alert.setContentText("안녕하세요 "+systemver+"입니다. "
+76:        + "\n인사관리시스템은 부서관리, 관리자관리, 인사에 관련된 입력/수정을 하는 시스템입니다."
+77:        + "\n 시작은 시작메뉴를 선택하십시오.");
+78:       alert.show();
+79:  }
+80:  @FXML
+81:  void onMenuction(ActionEvent event) {
+82: 	// 메뉴를 선택하면 해당 탭을 보입니다.
+83:  }
+84: }

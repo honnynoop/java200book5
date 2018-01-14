@@ -1,0 +1,62 @@
+01: package kr.co.infopub.chapter.s183.util;
+02: import kr.co.infopub.chapter.s183.dto.DepCountDto;
+03: import kr.co.infopub.chapter.s183.dto.DepartmentDto;
+04: public class EmpUtil {
+05:  // (10)
+06:  public static String q(String msg){
+07: 	return "("+msg+")";
+08:  }
+09:  // Administration(10)
+10:  public static String tname(DepartmentDto ee){
+11: 	return ee.getDepartment_name()+q(ee.getDepartment_id()+"");
+12:  }
+13:  // Administration(10)
+14:  public static String tname(DepCountDto ee){
+15: 	return ee.getDepartment_name()+q(ee.getDepartment_id()+"");
+16:  }
+17:  // /101/102/103 -> /ÀÇ °³¼ö -1 -> 2
+18:  public static   int level(String msg){
+19: 	String [] sp=msg.split("/");
+20: 	return sp.length-1;
+21:  }
+22:  // /101/102/103,2 -> 102
+23:  public static String level(String msg, int index){
+24: 	String [] sp=msg.split("/");
+25: 	return sp[index];
+26:  }
+27:  // helloHRD -> loHRD
+28:  public static  String str(String msg){
+29: 	return msg.substring(3);
+30:  }
+31:  // helloHRD -> hel
+32:  public  static String bfstr(String msg){
+33: 	return msg.substring(0,3);
+34:  }
+35:  // 100(sdfs sfsfs asdfasdf) -> 100
+36:  public static String sname(String emp){
+37: 	return bfstr(emp);
+38:  }
+39:  // (100) -> 100
+40:  public static String dep(String msg){
+41: 	String ss="";
+42: 	if(msg.indexOf("(")!=-1){
+43: 		ss=msg.substring(0, msg.indexOf("("));
+44: 	}else{
+45: 		ss=msg.trim();
+46: 	}
+47: 	return ss.trim();
+48:  }
+49:  // 001100(sdfs sfsfs asdfasdf)-> 100(sdfs sfsfs asdfasdf)
+50: /* public static String tname(EmployeeDto emp, int index){
+51: 	return str(level(emp.getOrder2(),index)+name(emp));
+52:  }
+53:  public static int  level(EmployeeDto emp){
+54: 	return level(emp.getOrder2());
+55:  }
+56:  public static String level(EmployeeDto emp, int index){
+57: 	return level(emp.getOrder2(),index);
+58:  }
+59:  public static String name(EmployeeDto ee){
+60:     return q(ee.getFirstName()+" "+ee.getLastName());
+61:  }*/
+62: }

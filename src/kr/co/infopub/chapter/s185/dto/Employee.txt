@@ -1,0 +1,204 @@
+001: package kr.co.infopub.chapter.s185.dto;
+002: 
+003: import javafx.beans.property.*;
+004: import java.sql.Date;
+005: 
+006: public class Employee {
+007:     //Declare Employees Table Columns
+008:     private IntegerProperty employee_id;
+009:     private StringProperty first_name;
+010:     private StringProperty last_name;
+011:     private StringProperty email;
+012:     private StringProperty phone_number;
+013:     private SimpleObjectProperty<Date> hire_date;
+014:     private StringProperty job_id;
+015:     private DoubleProperty salary;
+016:     private DoubleProperty commission_pct;
+017:     private IntegerProperty manager_id;
+018:     private IntegerProperty department_id;
+019: 
+020:     private StringProperty order2;
+021:     
+022:     
+023:     //Constructor
+024:     public Employee() {
+025:         this.employee_id = new SimpleIntegerProperty();
+026:         this.first_name = new SimpleStringProperty();
+027:         this.last_name = new SimpleStringProperty();
+028:         this.email = new SimpleStringProperty();
+029:         this.phone_number = new SimpleStringProperty();
+030:         this.hire_date = new SimpleObjectProperty<>();
+031:         this.job_id = new SimpleStringProperty();
+032:         this.salary = new SimpleDoubleProperty();
+033:         this.commission_pct = new SimpleDoubleProperty();
+034:         this.manager_id = new SimpleIntegerProperty();
+035:         this.department_id = new SimpleIntegerProperty();
+036:         this.order2= new SimpleStringProperty();
+037:     }
+038:     
+039:     public StringProperty order2Property() {
+040: 		return order2;
+041: 	}
+042:    
+043:     public String getOrder2() {
+044: 		return order2.get();
+045: 	}
+046: 
+047: 	public void setOrder2(String order2) {
+048: 		this.order2.set(order2);
+049: 	}
+050: 
+051: 
+052: 	//employee_id
+053:     public int getEmployeeId() {
+054:         return employee_id.get();
+055:     }
+056: 
+057:     public void setEmployeeId(int employeeId){
+058:         this.employee_id.set(employeeId);
+059:     }
+060: 
+061:     public IntegerProperty employeeIdProperty(){
+062:         return employee_id;
+063:     }
+064: 
+065:     //first_name
+066:     public String getFirstName () {
+067:         return first_name.get();
+068:     }
+069: 
+070:     public void setFirstName(String firstName){
+071:         this.first_name.set(firstName);
+072:     }
+073: 
+074:     public StringProperty firstNameProperty() {
+075:         return first_name;
+076:     }
+077: 
+078:     //last_name
+079:     public String getLastName () {
+080:         return last_name.get();
+081:     }
+082: 
+083:     public void setLastName(String lastName){
+084:         this.last_name.set(lastName);
+085:     }
+086: 
+087:     public StringProperty lastNameProperty() {
+088:         return last_name;
+089:     }
+090: 
+091:     //email
+092:     public String getEmail () {
+093:         return email.get();
+094:     }
+095: 
+096:     public void setEmail (String email){
+097:         this.email.set(email);
+098:     }
+099: 
+100:     public StringProperty emailProperty() {
+101:         return email;
+102:     }
+103: 
+104:     //phone_number
+105:     public String getPhoneNumber () {
+106:         return phone_number.get();
+107:     }
+108: 
+109:     public void setPhoneNumber (String phoneNumber){
+110:         this.phone_number.set(phoneNumber);
+111:     }
+112: 
+113:     public StringProperty phoneNumberProperty() {
+114:         return phone_number;
+115:     }
+116: 
+117:     //hire_date
+118:     public Object getHireDate(){
+119:         return hire_date.get();
+120:     }
+121: 
+122:     public void setHireDate(Date hireDate){
+123:         this.hire_date.set(hireDate);
+124:     }
+125: 
+126:     public SimpleObjectProperty<Date> hireDateProperty(){
+127:         return hire_date;
+128:     }
+129: 
+130:     //job_id
+131:     public String getJobId () {
+132:         return job_id.get();
+133:     }
+134: 
+135:     public void setJobId (String jobId){
+136:         this.job_id.set(jobId);
+137:     }
+138: 
+139:     public StringProperty jobIdProperty() {
+140:         return job_id;
+141:     }
+142: 
+143:     //salary
+144:     public double getSalary() {
+145:         return salary.get();
+146:     }
+147: 
+148:     public void setSalary(double salary){
+149:         this.salary.set(salary);
+150:     }
+151: 
+152:     public DoubleProperty salaryProperty(){
+153:         return salary;
+154:     }
+155: 
+156:     //commission_pct
+157:     public double getCommissionPct() {
+158:         return commission_pct.get();
+159:     }
+160: 
+161:     public void setCommissionPct(double commissionPct){
+162:         this.commission_pct.set(commissionPct);
+163:     }
+164: 
+165:     public DoubleProperty commissionPctProperty(){
+166:         return commission_pct;
+167:     }
+168: 
+169:     //manager_id
+170:     public int getManagerId() {
+171:         return manager_id.get();
+172:     }
+173: 
+174:     public void setManagerId(int managerId){
+175:         this.manager_id.set(managerId);
+176:     }
+177: 
+178:     public IntegerProperty managerIdProperty(){
+179:         return manager_id;
+180:     }
+181: 
+182:     //department_id
+183:     public int getDepartmanId() {
+184:         return department_id.get();
+185:     }
+186: 
+187:     public void setDepartmantId(int departmentId){
+188:         this.department_id.set(departmentId);
+189:     }
+190: 
+191:     public IntegerProperty departmentIdProperty(){
+192:         return department_id;
+193:     }
+194: 
+195: 	@Override
+196: 	public String toString() {
+197: 		return "[employee_id=" + employee_id + ", first_name=" + first_name + ", last_name=" + last_name
+198: 				+ ", email=" + email + ", phone_number=" + phone_number + ", hire_date=" + hire_date + ", job_id="
+199: 				+ job_id + ", salary=" + salary + ", commission_pct=" + commission_pct + ", manager_id=" + manager_id
+200: 				+ ", department_id=" + department_id + "]";
+201: 	}
+202:     
+203: 
+204: }

@@ -1,0 +1,39 @@
+01: package kr.co.infopub.chapter.s183.test;
+02: import java.sql.SQLException;
+03: import java.util.List;
+04: import javafx.scene.control.TreeItem;
+05: import kr.co.infopub.chapter.s183.dto.DepartmentDto;
+06: import kr.co.infopub.chapter.s183.model.EmployeeDAO;
+07: import kr.co.infopub.chapter.s183.util.EmpUtil;
+08: // 부서는 계층 구조가 없어서 트리를 만들 필요가 없다.
+09: public class DepartmentTest4 {
+10:  public static void main(String[] args) {
+11: 	EmployeeDAO ddao=new EmployeeDAO();
+12: 	try {
+13: 		List<DepartmentDto> lists=ddao.findAllDepartments();
+14: 		TreeItem<String> root = new TreeItem<String>("부서");
+15: 		makeDepTree(root,lists);
+16: 		printTree(root,1);
+17: 	} catch (SQLException e) {
+18: 		System.out.println( e);
+19: 	}
+20:  }
+21:  public static void makeDepTree(
+22: 		 TreeItem<String> front,List<DepartmentDto> dlists){
+23: 	for (DepartmentDto dep: dlists) {
+24: 	  TreeItem<String> troots=new TreeItem<String>(EmpUtil.tname(dep));
+25: 	  front.getChildren().add(troots);
+26: 	}
+27:  }	
+28:  public static void printTree(TreeItem<String> root , int index){
+29: 	String tt="\t";
+30: 	String s="";
+31: 	for(int i=1; i<index ; i++){
+32: 		s+=tt;
+33: 	}
+34: 	System.out.println(s+""+root.getValue());
+35: 	for(TreeItem<String> ss:root.getChildren()){
+36: 		printTree(ss, index+1);
+37: 	}
+38:  }
+39: }

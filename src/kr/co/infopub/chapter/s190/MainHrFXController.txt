@@ -1,0 +1,192 @@
+001: package kr.co.infopub.chapter.s190;
+002: import java.io.IOException;
+003: import java.util.Date;
+004: import java.util.Optional;
+005: import javafx.application.Platform;
+006: import javafx.event.ActionEvent;
+007: import javafx.fxml.FXML;
+008: import javafx.fxml.FXMLLoader;
+009: import javafx.scene.control.Alert;
+010: import javafx.scene.control.Alert.AlertType;
+011: import javafx.scene.control.ButtonType;
+012: import javafx.scene.control.MenuItem;
+013: import javafx.scene.control.Tab;
+014: import javafx.scene.control.TabPane;
+015: import javafx.scene.layout.BorderPane;
+016: import kr.co.infopub.chapter.s190.util.PTS;
+017: public class MainHrFXController {
+018: 
+019:     @FXML
+020:     private MenuItem menuDepart;
+021: 
+022:     @FXML
+023:     private MenuItem menuManage;
+024: 
+025:     @FXML
+026:     private MenuItem menuSearch;
+027: 
+028:     @FXML
+029:     private MenuItem menuUpdate;
+030:     
+031:     @FXML
+032:     private MenuItem menuChart;
+033: 
+034:     @FXML
+035:     private TabPane mainTabPane;
+036:     
+037:     @FXML
+038:     private Tab tab3;
+039: 
+040:     @FXML
+041:     private Tab tab1;
+042: 
+043:     @FXML
+044:     private Tab tab2;
+045: 
+046:     @FXML
+047:     private Tab tab4;
+048:     
+049:     @FXML
+050:     private Tab tab5;
+051:     
+052:     @FXML
+053:     private BorderPane searchTabBorder;
+054: 
+055:     @FXML
+056:     private BorderPane empTabBorder;
+057: 
+058:     @FXML
+059:     private BorderPane depChartBorder;
+060: 
+061:     @FXML
+062:     private BorderPane debTabBorder;
+063: 
+064:     @FXML
+065:     private BorderPane updateTabBorder;
+066: 
+067:     String systemver="HR Information System ver.1.0";
+068:     
+069:  @FXML
+070:  public void initialize () {
+071:     tab1.setOnSelectionChanged(eee->{
+072:     	if(tab1.isSelected()){
+073:     		System.out.println("tab1---->"+((Tab)eee.getSource()).getId());
+074:     		debTabBorder.setCenter(departView);  
+075:     	}
+076:     });
+077:     tab2.setOnSelectionChanged(eee->{
+078:     	if(tab2.isSelected()){
+079:     		System.out.println("tab2---->"+((Tab)eee.getSource()).getId());
+080:     		empTabBorder.setCenter( emptvView);
+081:     	}
+082:     });
+083:     tab3.setOnSelectionChanged(eee->{
+084:     	if(tab3.isSelected()){
+085:     		System.out.println("tab3---->"+((Tab)eee.getSource()).getId());
+086:     		searchTabBorder.setCenter(empsearchView);
+087:     	}
+088:     });
+089:     tab4.setOnSelectionChanged(eee->{
+090:     	if(tab4.isSelected()){
+091:     		System.out.println("tab4---->"+((Tab)eee.getSource()).getId());
+092:     		updateTabBorder.setCenter(empupdateView);
+093:     	}
+094:     });
+095:     tab5.setOnSelectionChanged(eee->{
+096:     	if(tab5.isSelected()){
+097:     		System.out.println("tab5---->"+((Tab)eee.getSource()).getId());
+098:     		depChartBorder.setCenter(chartView);
+099:     		piecon.refresh();
+100:         }
+101:     });
+102:  }
+103:     @FXML
+104:     void onStartAction(ActionEvent event) {
+105:     	  Alert alert = new Alert (Alert.AlertType.INFORMATION);
+106:           alert.setTitle(systemver);
+107:           alert.setHeaderText("인사관리 시스템 "+PTS.toDate3(new Date()));
+108:           alert.setContentText("인사관리시스템은 부서관리, 관리자관리, 인사에 관련된 입력/수정을 하는 시스템입니다.");
+109:           alert.show();
+110:           mainTabPane.setVisible(true);    
+111:     }
+112: 
+113:     @FXML
+114:     void onExitAction(ActionEvent event) {
+115:     	Alert alert = new Alert(AlertType.CONFIRMATION);
+116:     	alert.setTitle(systemver);
+117:         alert.setHeaderText("인사관리 시스템("+PTS.toDate3(new Date())+")을 끝내시겠습니까?");
+118:     	alert.setContentText("정말 끝내시겠습니까?");
+119:     	Optional<ButtonType> result = alert.showAndWait();
+120:     	if (result.get() == ButtonType.OK){
+121:     		Platform.exit();
+122:     		//System.exit(0);
+123:     	} else return;
+124:     }
+125: 
+126:     @FXML
+127:     void onHelpAction(ActionEvent event) {
+128:     	  Alert alert = new Alert (Alert.AlertType.INFORMATION);
+129:           alert.setTitle(systemver);
+130:           alert.setHeaderText("인사관리 시스템 "+PTS.toDate3(new Date()));
+131:           alert.setContentText("안녕하세요 "+systemver+"입니다. "
+132:           		+ "\n인사관리시스템은 부서관리, 관리자관리, 인사에 관련된 입력/수정을 하는 시스템입니다."
+133:           		+ "\n 시작은 시작메뉴를 선택하십시오.");
+134:           alert.show();
+135:     }
+136: 
+137:  @FXML
+138:  void onMenuction(ActionEvent event) {
+139: 	if(event.getSource()==menuDepart){
+140: 		System.out.println("tab1------------------------->");
+141: 		mainTabPane.getSelectionModel().select(tab1);
+142: 		debTabBorder.setCenter(departView);  
+143: 	}else if(event.getSource()==menuManage){
+144: 		System.out.println("tab2------------------------->");
+145: 		mainTabPane.getSelectionModel().select(tab2);
+146: 		empTabBorder.setCenter( emptvView);
+147: 	}else if(event.getSource()==menuSearch){
+148: 		System.out.println("tab3------------------------->");
+149: 		mainTabPane.getSelectionModel().select(tab3);
+150: 		searchTabBorder.setCenter(empsearchView);
+151: 	}else if(event.getSource()==menuUpdate){
+152: 		System.out.println("tab4------------------------->");
+153: 		mainTabPane.getSelectionModel().select(tab4);
+154: 		updateTabBorder.setCenter(empupdateView);
+155: 	}else if(event.getSource()==menuChart){
+156: 		System.out.println("tab5------------------------->");
+157: 		mainTabPane.getSelectionModel().select(tab5);
+158: 		depChartBorder.setCenter(chartView);
+159: 		piecon.refresh();
+160: 	}
+161:  }
+162:  // 메인페인에 각 뷰를 붙인다.
+163:  BorderPane departView;
+164:  public void setView1(BorderPane departView) {
+165: 	this.departView=departView;
+166: 	//첫 화면을 반영한다.
+167: 	debTabBorder.setCenter(departView);  
+168:  }
+169:  BorderPane emptvView;
+170:  public void setView2(BorderPane emptvView) {
+171: 	this.emptvView=emptvView;
+172:  }
+173:  BorderPane empsearchView;
+174:  public void setView(BorderPane empsearchView) {
+175: 	this.empsearchView=empsearchView;
+176:  }
+177:  BorderPane empupdateView;
+178:  public void setView3(BorderPane empupdateView) {
+179: 	this.empupdateView=empupdateView;
+180:  }
+181:  BorderPane chartView;
+182:  PieChartController piecon;
+183:  public void setView4(FXMLLoader loader5) {
+184: 	try {
+185: 		chartView = (BorderPane) loader5.load();
+186: 		 piecon=loader5.getController();
+187: 	} catch (IOException e) {
+188: 		System.out.println("setView4 ---------------fail -------------------------------------------");
+189: 	}
+190: 	
+191:  }	
+192: }

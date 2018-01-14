@@ -1,0 +1,72 @@
+01: <?xml version="1.0" encoding="UTF-8"?>
+02: <?import java.lang.*?>
+03: <?import javafx.scene.control.*?>
+04: <?import javafx.scene.layout.*?>
+05: <?import javafx.scene.control.Menu?>
+06: <?import javafx.scene.control.MenuBar?>
+07: <?import javafx.scene.control.MenuItem?>
+08: <?import javafx.scene.layout.BorderPane?>
+09: <?import javafx.scene.control.Accordion?>
+10: <?import javafx.scene.layout.AnchorPane?>
+11: 
+12: <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="850" prefWidth="1200" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kr.co.infopub.chapter.s182.MainHrFXController">
+13:    <top>
+14:       <MenuBar BorderPane.alignment="CENTER">
+15:         <menus>
+16:           <Menu mnemonicParsing="false" text="?ŒŒ?¼">
+17:             <items>
+18:             <MenuItem mnemonicParsing="false" onAction="#onStartAction" text="HR ?‹œ?ž‘" />
+19:               <MenuItem mnemonicParsing="false" onAction="#onExitAction" text="HR ?" />
+20:             </items>
+21:           </Menu>
+22:           <Menu mnemonicParsing="false" text="?ž‘?—…?ƒ­?„ ?ƒ">
+23:             <items>
+24:               <MenuItem fx:id="menuDepart" mnemonicParsing="false" onAction="#onMenuction" text="ë¶??„œ ë³´ê¸°" />
+25:               <MenuItem fx:id="menuManage" mnemonicParsing="false" onAction="#onMenuction" text="ê´?ë¦¬ìž ë³´ê¸°" />
+26:               <MenuItem fx:id="menuSearch" mnemonicParsing="false" onAction="#onMenuction" text="ì°¾ê¸° ë°? ì¶”ê?" />
+27:               <MenuItem fx:id="menuUpdate" mnemonicParsing="false" onAction="#onMenuction" text="?ˆ˜? •?•˜ê¸?" />
+28:               <MenuItem fx:id="menuChart" mnemonicParsing="false" onAction="#onMenuction" text="ë¶??„œì°¨íŠ¸ë³´ê¸°" />
+29:             </items>
+30:           </Menu>
+31:           <Menu mnemonicParsing="false" text="?„??">
+32:             <items>
+33:               <MenuItem mnemonicParsing="false" onAction="#onHelpAction" text="About" />
+34:             </items>
+35:           </Menu>
+36:         </menus>
+37:       </MenuBar>
+38:    </top>
+39:      <center>
+40:       <TabPane fx:id="mainTabPane" prefHeight="800.0" prefWidth="1100.0" tabClosingPolicy="UNAVAILABLE" visible="false">
+41:         <tabs>
+42:           <Tab fx:id="tab1" text="ë¶??„œ(ë¶??„œë³„ì¸?›)">
+43:                <content>
+44:                   <BorderPane fx:id="debTabBorder" prefHeight="543.0" prefWidth="1000.0" />
+45:                </content>
+46:           </Tab>
+47:           <Tab fx:id="tab2" text="ì§ì›ê³? ê´?ë¦¬ìž">
+48:           <content>
+49:                   <BorderPane fx:id="empTabBorder" prefHeight="543.0" prefWidth="1100.0" />
+50:                    
+51:                </content>
+52:           </Tab>
+53:            <Tab fx:id="tab3" text="ì§ì›ì°¾ê¸°/ì¶”ê?">
+54:           <content>
+55:                   <BorderPane fx:id="searchTabBorder" prefHeight="543.0" prefWidth="1100.0" />
+56:                </content>
+57:           </Tab>
+58:           <Tab fx:id="tab4" text="ì§ì›? •ë³´ìˆ˜? •">
+59:           <content>
+60:                   <BorderPane fx:id="updateTabBorder" prefHeight="543.0" prefWidth="1100.0" />
+61:                </content>
+62:           </Tab>
+63:            <Tab fx:id="tab5" text="ë¶??„œ?†µê³?(?ŒŒ?´)">
+64:           <content>
+65:                   <BorderPane fx:id="depChartBorder" prefHeight="543.0" prefWidth="1100.0" />
+66:                  
+67:                </content>
+68:           </Tab>
+69:         </tabs>
+70:       </TabPane>
+71:    </center>
+72: </BorderPane>

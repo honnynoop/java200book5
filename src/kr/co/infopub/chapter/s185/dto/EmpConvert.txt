@@ -1,0 +1,44 @@
+01: package kr.co.infopub.chapter.s185.dto;
+02: 
+03: import java.util.ArrayList;
+04: import java.util.List;
+05: 
+06: import javafx.collections.FXCollections;
+07: import javafx.collections.ObservableList;
+08: 
+09: public class EmpConvert {
+10: 
+11: 	public static Employee toPro(EmployeeDto b){
+12: 		Employee bp=new Employee();
+13: 		bp.setCommissionPct(b.getCommissionPct());
+14: 		bp.setDepartmantId(b.getDepartmantId());
+15: 		bp.setEmail(b.getEmail());
+16: 		bp.setEmployeeId(b.getEmployeeId());
+17: 		bp.setFirstName(b.getFirstName());
+18: 		bp.setHireDate(b.getHireDate());
+19: 		bp.setJobId(b.getJobId());
+20: 		bp.setLastName(b.getLastName());
+21: 		bp.setManagerId(b.getManagerId());
+22: 		bp.setOrder2(b.getOrder2());
+23: 		bp.setPhoneNumber(b.getPhoneNumber());
+24: 		bp.setSalary(b.getSalary());
+25: 		return bp;
+26: 	}
+27: 	
+28: 	public static List<Employee> toPro(List<EmployeeDto> blist){
+29: 		List<Employee> bplists=new ArrayList<>();
+30: 		for(EmployeeDto b:blist){
+31: 			bplists.add(toPro(b));
+32: 		}
+33: 		return bplists;
+34: 	}
+35: 	public static ObservableList<Employee> toObservPro(List<Employee> alists){
+36: 		ObservableList<Employee> bList = FXCollections.observableArrayList(alists);
+37: 		return bList;
+38: 	}
+39: 	
+40: 	public static ObservableList<Employee> toObservProFromDto(List<EmployeeDto> alists){
+41: 		return toObservPro(toPro(alists));
+42: 	}
+43: 	
+44: }

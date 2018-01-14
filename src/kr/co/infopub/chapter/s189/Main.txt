@@ -1,0 +1,49 @@
+01: package kr.co.infopub.chapter.s189;
+02: import javafx.application.Application;
+03: import javafx.stage.Stage;
+04: import javafx.scene.Scene;
+05: import javafx.scene.layout.BorderPane;
+06: import javafx.fxml.FXMLLoader;
+07: public class Main extends Application {
+08:  private Stage primaryStage;
+09:  private BorderPane root;
+10:  @Override
+11:  public void start(Stage primaryStage) {
+12: 	primaryStage.setTitle("Human Resouce Management System ver. 0.6");
+13: 	this.primaryStage=primaryStage;
+14:     //---------------소스 분리 시킴
+15: 	showHR();
+16:  }
+17:  public void showHR() {
+18:    try {
+19: 	FXMLLoader loader = new FXMLLoader();
+20:     loader.setLocation(Main.class.getResource("view/MainHrFX.fxml"));
+21:     root = (BorderPane) loader.load();
+22:     //------>>여기에 소스 추가
+23:     // 기본 뼈대 화면 s182
+24:     MainHrFXController empcon=loader.getController();
+25:     // 부서화면 s185
+26:     FXMLLoader loader4 = new FXMLLoader();
+27:     loader4.setLocation(Main.class.getResource("view/DepTabView.fxml"));
+28:     BorderPane departView = (BorderPane) loader4.load();
+29:     // 기본 뼈대에 부서화면을 붙임
+30:     empcon.setView1(departView);
+31:     //<<------여기 사이에  소스 추가
+32: 	Scene scene = new Scene(root,1200,880);
+33: 	scene.getStylesheets().add(
+34: 	   Main.class.getResource("view/application.css").toExternalForm());
+35: 	primaryStage.setScene(scene);
+36: 	primaryStage.show();
+37: 	primaryStage.setResizable(false);
+38: 	// 화면 끝날때 close 표시
+39: 	primaryStage.setOnCloseRequest(e -> {
+40:     	System.out.println("Close primaryStage !!!");
+41:     });
+42:    } catch(Exception e) {
+43: 		e.printStackTrace();
+44:    }
+45:  }
+46:  public static void main(String[] args) {
+47: 	launch(args);
+48:  }
+49: }

@@ -1,0 +1,141 @@
+001: package kr.co.infopub.chapter.s183.model;
+002: import java.sql.ResultSet;
+003: import java.sql.DriverManager;
+004: import java.sql.Statement;
+005: import java.text.SimpleDateFormat;
+006: import java.util.Date;
+007: import java.sql.Connection;
+008: import java.sql.SQLException;
+009: public abstract class DataBase {
+010:  public static final String DRIVER="oracle.jdbc.driver.OracleDriver";
+011:  public static final String URLS="jdbc:oracle:thin:@127.0.0.1:1521:xe";
+012:  public static final String USER="hr";
+013:  public static final String PWD="hr";
+014:  private boolean isD=true;
+015:  private boolean isS=true;
+016:  public DataBase() {
+017: 	init();   // 드라이버 로딩 1/6
+018:  }//
+019:  private void init(){
+020: 	try {
+021: 		Class.forName(DRIVER);
+022: 		log("1/6 Driver Loading Success!!!");
+023: 	} catch (ClassNotFoundException e) {
+024: 		log("1/6 Driver Loading Fail!!!");
+025: 	}//
+026:  }
+027:  //------------- JDBC 2/6, 6/6
+028:  // DB Connection JDBC 2/6
+029:  public Connection getConnection() throws SQLException{//
+030: 	Connection conn=null;
+031: 	conn=DriverManager.getConnection(URLS, USER,PWD);
+032: 	log("2/6 Connection Success!!!");
+033: 		return conn;
+034:  }
+035:  // DB Close JDBC 6/6
+036:  public void close(Connection conn, Statement stmt,ResultSet rs){
+037: 	if(rs!=null){
+038: 		try {
+039: 			rs.close();
+040: 		} catch (SQLException e) {
+041: 			
+042: 		}
+043: 	}//
+044: 	if(stmt!=null){
+045: 		try {
+046: 			stmt.close();
+047: 		} catch (SQLException e) {
+048: 			
+049: 		}
+050: 	}//
+051: 	if(conn!=null){
+052: 		try {
+053: 			conn.close();
+054: 			log("6/6 Close Success!!!");
+055: 	} catch (SQLException e) {
+056: 		log("6/6 Close Fail: ",e);
+057: 		}
+058: 	}
+059:  }
+060:  //----------- log
+061:  // 정상로그
+062:  public void log(String msg){
+063: 	if(isD){
+064: 		System.out.println(this.getClass()+": "+msg);
+065: 	}
+066:  }
+067:  // 예외용 로그
+068:  public void log(String msg,Exception e){
+069: 	if(isD){
+070: 		System.out.println(this.getClass()+": "+msg);
+071: 		System.out.println("============>"+e);
+072: 	}
+073:  }
+074:  // PTS 181, 182 SQL 추적용, 클래스이름.메서드이름포함
+075:  public void log(String msg,String methodName){
+076:   if(isD || isS){
+077: 	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+078: 	String[] mmm=msg.split("     ");
+079: 	String ss="";
+080: 	for (int i = 0; i < mmm.length; i++) {
+081: 		if(mmm[i]!=null && !mmm[i].trim().equals("")){
+082: 		ss+= " "+mmm[i].trim()+" \n ";
+083: 		}
+084: 	}
+085: 	System.out.println("CRUD---------"+this.getClass()+"."+methodName+"()");
+086: 	System.out.println(ss.trim());
+087: 	System.out.println("CRUD--------"+sdf.format(new Date()));
+088:   }
+089:  }//
+090:  // PTS 181, 182 SQL 추적용, 클래스이름.메서드이름, 입력 데이터 포함
+091:  public void log(String msg,String methodName,Object data){
+092:   if(isD || isS){
+093: 	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+094: 	String[] mmm=msg.split("     ");
+095: 	String ss="";
+096: 	for (int i = 0; i < mmm.length; i++) {
+097: 		if(mmm[i]!=null && !mmm[i].trim().equals("")){
+098: 		ss+= " "+mmm[i].trim()+" \n ";
+099: 		}
+100: 	}
+101: 	System.out.println("CRUD-----"+this.getClass()+"."+methodName+"()");
+102: 	System.out.println(ss.trim());
+103: 	System.out.println("Data : "+data.toString());
+104: 	System.out.println("CRUD-------"+sdf.format(new Date()));
+105:   }
+106:  }//
+107:  //----------- quot 숫자 문자 -> NULL
+108:  // hello -> 'hello', 입력값이 없으면 -> NULL
+109:  public String quots(String msg){
+110:   String ss="";
+111:   if(msg==null || msg.trim().equals("")|| msg.trim().equals("0")
+112: 		                           || msg.trim().equals("0.0")){
+113:    ss=" NULL ";
+114:   }else{
+115:    ss="'"+msg+"'";
+116:   }
+117:   return ss;
+118:  }
+119:  // 10 -> 10, 입력값이 없으면 -> NULL
+120:  public String quoti(String msg){
+121:    	  String ss="";
+122:   if(msg==null || msg.trim().equals("")|| msg.trim().equals("0")
+123: 		                               || msg.trim().equals("0.0")){
+124:    ss=" NULL ";
+125:   }else{
+126:    ss=""+msg+"";
+127:   }
+128:   return ss;
+129:  }
+130:  // 10.5 -> 10.5, 입력값이 없으면 -> NULL
+131:  public String quotd(String msg){
+132:   String ss="";
+133:   if(msg==null || msg.trim().equals("")|| msg.trim().equals("0")
+134: 		                          || msg.trim().equals("0.0")){
+135:   ss=" NULL ";
+136:   }else{
+137:   ss=""+msg+"";
+138:   }
+139:   return ss;
+140:  }
+141: }

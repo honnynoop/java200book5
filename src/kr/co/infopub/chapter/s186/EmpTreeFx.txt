@@ -1,0 +1,80 @@
+01: package kr.co.infopub.chapter.s186;
+02: import java.sql.SQLException;
+03: import java.util.List;
+04: import javafx.application.Application;
+05: import javafx.geometry.Insets;
+06: import javafx.scene.Scene;
+07: import javafx.scene.control.Label;
+08: import javafx.scene.control.TreeItem;
+09: import javafx.scene.control.TreeView;
+10: import javafx.scene.layout.BorderPane;
+11: import javafx.stage.Stage;
+12: import kr.co.infopub.chapter.s185.dto.EmpConvert;
+13: import kr.co.infopub.chapter.s185.dto.Employee;
+14: import kr.co.infopub.chapter.s185.dto.EmployeeDto;
+15: import kr.co.infopub.chapter.s185.model.EmployeeDAO;
+16: import kr.co.infopub.chapter.s185.util.EmpUtil;
+17: public class EmpTreeFx extends Application {
+18:  public static void main(String[] args) {
+19:   launch(args);
+20:  }
+21:  EmployeeDAO employeeDAO=new EmployeeDAO();
+22:  // 트리 계층 구조 만들기
+23:  public  void makeEmpTree(TreeItem<String> front,List<Employee> dlists,
+24: 		                                      String key, int index,int max){
+25:   if(index>max){return ; }  //max를 넘으면 끝
+26:   for (Employee emp: dlists) {  //개수가 있으니 끝날 것이다.
+27: 	if(EmpUtil.level(emp)!=index){   //원하는 레벨만 찾음
+28: 		continue;
+29: 	}else if(index>1 && EmpUtil.level(emp)==index){   //2부터는 1의 키값과 비교
+30: 		if(EmpUtil.level(emp,index-1).equals(key)){
+31: 			TreeItem<String> aa=new TreeItem<String>(EmpUtil.tname(emp, index));
+32: 			front.getChildren().add(aa);
+33: 			makeEmpTree(aa,dlists,EmpUtil.level(emp,index),index+1,max);
+34: 		}else{
+35: 			continue;
+36: 		}
+37: 	}else if(EmpUtil.level(emp)==1){  //1의 키값이 없기 때문
+38: 		TreeItem<String> aa=new TreeItem<String>(EmpUtil.tname(emp, 1));
+39: 		front.getChildren().add(aa);
+40: 		makeEmpTree(aa,dlists,EmpUtil.level(emp,1),2,max);
+41: 	}
+42:   }
+43:  }	
+44:  @Override
+45:  public void start(Stage stage) {
+46:   BorderPane vbox=new BorderPane();
+47:   vbox.setPadding(new Insets(10, 10, 10, 10));
+48:   int max=0;
+49: 	try {
+50: 		// 가장 큰 레벨을 얻느다. 
+51: 		max = employeeDAO.getTreeMaxLevel();
+52: 		// 관리자/부서원을 트리관계를 얻는다. 계층구조다.
+53: 		List<EmployeeDto> blists = employeeDAO.findTreeManagerInEmployee();
+54: 		// JavaFX 트리뷰용 리스트로 변환한다.
+55: 		List<Employee> dlists = EmpConvert.toObservProFromDto(blists);
+56: 		// "매니저와 직원" 트리아이템을 만든다.
+57: 		TreeItem<String> root = new TreeItem<String>("매니저와 직원");
+58: 		// "매니저와 직원" 트리아이템에 계층 구조 트리 아이템을 붙인다.
+59: 		makeEmpTree(root,dlists,"",1,max);
+60: 		// 트리뷰에 "매니저와 직원" 트리아이템을 붙인다.
+61: 		TreeView<String> treeView = new TreeView<String>(root);
+62: 		root.setExpanded(true);
+63: 		vbox.setCenter(treeView);
+64: 		Label label = new Label("                          ");
+65: 		vbox.setBottom(label);
+66: 		Scene scene = new Scene(vbox, 400, 800);
+67: 		stage.setScene(scene);
+68: 		stage.setTitle("Human Resouce Management System ver. 0.3");
+69: 		stage.show();
+70: 		treeView.getSelectionModel().selectedItemProperty()
+71: 		.addListener( (observable, oldValue, newValue) -> {
+72: 			String name =newValue.getValue();
+73: 			label.setText(   EmpUtil.dep(name));
+74: 		});
+75: 
+76: 	} catch (SQLException e) {
+77: 		System.out.println(e);
+78: 	}
+79:  }
+80: }

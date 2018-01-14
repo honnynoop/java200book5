@@ -1,0 +1,622 @@
+001: package kr.co.infopub.chapter.s190;
+002: import java.sql.Date;
+003: import java.sql.SQLException;
+004: import java.text.SimpleDateFormat;
+005: import java.util.List;
+006: import java.util.Optional;
+007: import java.util.concurrent.Executor;
+008: import java.util.concurrent.Executors;
+009: 
+010: import javafx.collections.FXCollections;
+011: import javafx.collections.ObservableList;
+012: import javafx.event.ActionEvent;
+013: import javafx.fxml.FXML;
+014: import javafx.scene.control.Alert;
+015: import javafx.scene.control.Alert.AlertType;
+016: import javafx.scene.control.Button;
+017: import javafx.scene.control.ButtonType;
+018: import javafx.scene.control.ComboBox;
+019: import javafx.scene.control.DatePicker;
+020: import javafx.scene.control.Label;
+021: import javafx.scene.control.SplitPane;
+022: import javafx.scene.control.TableColumn;
+023: import javafx.scene.control.TableView;
+024: import javafx.scene.control.TextField;
+025: import javafx.scene.control.TreeItem;
+026: import javafx.scene.layout.AnchorPane;
+027: import kr.co.infopub.chapter.s190.dto.DepConvert;
+028: import kr.co.infopub.chapter.s190.dto.Department;
+029: import kr.co.infopub.chapter.s190.dto.DepartmentDto;
+030: import kr.co.infopub.chapter.s190.dto.EmpConvert;
+031: import kr.co.infopub.chapter.s190.dto.Employee;
+032: import kr.co.infopub.chapter.s190.dto.EmployeeDto;
+033: import kr.co.infopub.chapter.s190.model.EmployeeDAO;
+034: import kr.co.infopub.chapter.s190.util.PTS;
+035: 
+036: public class EmployUpdateFxController {
+037: 	    @FXML
+038: 	    private TextField tfphone;
+039: 
+040: 	    @FXML
+041: 	    private TextField tfdepartid;
+042: 
+043: 	   
+044: 	    @FXML
+045: 	    private AnchorPane bottomsplit;
+046: 
+047: 	    @FXML
+048: 	    private Label lbhiredate;
+049: 
+050: 	    @FXML
+051: 	    private TextField tffirstname;
+052: 
+053: 	    @FXML
+054: 	    private Label lbjobid;
+055: 
+056: 	    @FXML
+057: 	    private TextField tflastname;
+058: 
+059: 	    @FXML
+060: 	    private TextField tfemail;
+061: 
+062: 	    @FXML
+063: 	    private TextField tfjobid;
+064: 
+065: 	    @FXML
+066: 	    private Label lbcommis;
+067: 
+068: 	    @FXML
+069: 	    private Label lbmanagerid;
+070: 
+071: 	    @FXML
+072: 	    private Label lbphone;
+073: 
+074: 
+075: 
+076: 	    @FXML
+077: 	    private TextField tfempid;
+078: 
+079: 	    @FXML
+080: 	    private AnchorPane topslplit;
+081: 
+082: 	    @FXML
+083: 	    private Label lbfirstname;
+084: 
+085: 	    @FXML
+086: 	    private SplitPane leftsplit;
+087: 
+088: 	    @FXML
+089: 	    private Label lbdepartid;
+090: 
+091: 	    @FXML
+092: 	    private Label lbsalary;
+093: 
+094: 	    @FXML
+095: 	    private Label lblastname;
+096: 
+097: 	    @FXML
+098: 	    private TextField tfcommis;
+099: 
+100: 	    @FXML
+101: 	    private DatePicker tfhiredate;
+102: 
+103: 	    @FXML
+104: 	    private TextField tfmanagerid;
+105: 
+106: 	    @FXML
+107: 	    private Label lbempid;
+108: 
+109: 	    @FXML
+110: 	    private TableView<Employee> employeeTable;
+111: 	    @FXML
+112: 	    private TableColumn<Employee, Integer>  empIdColumn;
+113: 	    @FXML
+114: 	    private TableColumn<Employee, String>  empNameColumn;
+115: 	    @FXML
+116: 	    private TableColumn<Employee, String> empLastNameColumn;
+117: 	    @FXML
+118: 	    private TableColumn<Employee, String> empEmailColumn;
+119: 	    @FXML
+120: 	    private TableColumn<Employee, String> empPhoneNumberColumn;
+121: 	    @FXML
+122: 	    private TableColumn<Employee, Date> empHireDateColumn;
+123: 	    
+124: 	    
+125: 	    @FXML
+126: 	    private TextField tfsalary;
+127: 
+128: 	    @FXML
+129: 	    private Button btnAllEmployee;
+130: 
+131: 	    @FXML
+132: 	    private Label lbemail;
+133: 	    
+134: 	    @FXML
+135: 	    private Button btnAddEmployee;
+136: 	  
+137: 	    
+138: 	    private Executor exec;
+139: 	    
+140: 	    EmployeeDAO employeeDAO=new EmployeeDAO();
+141: 	    
+142: 	    //년월일로 보이기
+143: 	    SimpleDateFormat sdf=new SimpleDateFormat("yyyy. MM. dd");
+144: 	    
+145: 	    @FXML
+146: 	    private Label lbjobid2;
+147: 	    @FXML
+148: 	    private Label lbdepartid2;
+149: 	    
+150: 	    @FXML
+151: 	    private TextField tfupdatemanager;
+152: 	    
+153: 	    @FXML
+154: 	    private ComboBox<String> cbJobid;
+155: 
+156: 	    @FXML
+157: 	    private ComboBox<String> cbdepartid;
+158: 	    
+159: 	    
+160: 	    @FXML
+161: 	    private Button btnAddAfEmployee;
+162: 	    
+163: 	    @FXML
+164: 	    private TableView<Employee> tvSearchManager;
+165: 	    @FXML
+166: 	    private TableColumn<Employee, Integer>  empIdColumn3;
+167: 	    @FXML
+168: 	    private TableColumn<Employee, String>  empNameColumn3;
+169: 	    @FXML
+170: 	    private TableColumn<Employee, String> empLastNameColumn3;
+171: 	    @FXML
+172: 	    private TableColumn<Employee, String> empEmailColumn3;
+173: 	    
+174: 	    @FXML
+175: 	    private Button btnSearchManager  ;
+176: 	    
+177: 	    @FXML
+178: 	    private TextField tfsearchmanager  ;
+179: 	    
+180: 	    @FXML
+181: 	    private Button btndelEmployee  ;
+182: 	    
+183: 	    
+184: 	    
+185: 	    private void clear(){
+186: //	    	tfempid.setText("");
+187: //			tffirstname.setText("");
+188: //			tflastname.setText("");
+189: //			tfemail.setText("");
+190: //			tfhiredate.getEditor().setText("");
+191: //			tfphone.setText("");
+192: //			tfcommis.setText("");
+193: //			tfsalary.setText("");
+194: //			tfdepartid.setText("");
+195: //			tfjobid.setText("");
+196: //			tfmanagerid.setText("");
+197: //			tfsearchmanager.setText("");
+198: 	    }
+199: 	    private void edit(boolean b){
+200: 	    	tfempid.setEditable(false);
+201: 			tffirstname.setEditable(b);
+202: 			tflastname.setEditable(b);
+203: 			tfemail.setEditable(b);
+204: 			tfhiredate.setEditable(b);
+205: 			tfphone.setEditable(b);
+206: 			tfcommis.setEditable(b);
+207: 			tfsalary.setEditable(b);
+208: 			tfdepartid.setEditable(b);
+209: 			tfjobid.setEditable(b);
+210: 			tfmanagerid.setEditable(b);
+211: 			tfsearchmanager.setEditable(b);
+212: 	    }
+213: 	    private void edit2(boolean b){
+214: 	    	
+215: 	    	//tfempid.setEditable(b);
+216: 			tffirstname.setEditable(b);
+217: 			tflastname.setEditable(b);
+218: 			tfemail.setEditable(b);
+219: 			//tfhiredate.setEditable(b);
+220: 			tfphone.setEditable(b);
+221: 			tfcommis.setEditable(b);
+222: 			tfsalary.setEditable(b);
+223: 			
+224: 			tfsearchmanager.setEditable(b);
+225: 			//tfdepartid.setEditable(b);
+226: 			//tfjobid.setEditable(b);
+227: 			//tfmanagerid.setEditable(b);
+228: 			if(b){
+229: 				tffirstname.setStyle("-fx-background-color: #0000ff");
+230: 				tflastname.setStyle("-fx-background-color: #0000ff");
+231: 				tfemail.setStyle("-fx-background-color: #0000ff");
+232: 				tfhiredate.setStyle("-fx-background-color: #0000ff");
+233: 				tfphone.setStyle("-fx-background-color: #0000ff");
+234: 				tfcommis.setStyle("-fx-background-color: #cccccc");
+235: 				tfsalary.setStyle("-fx-background-color: #cccccc");
+236: 				tfdepartid.setStyle("-fx-background-color: #cccccc");
+237: 				tfjobid.setStyle("-fx-background-color: #cccccc");
+238: 				tfmanagerid.setStyle("-fx-background-color: #cccccc");
+239: 				tfsearchmanager.setStyle("-fx-background-color: #cccccc");
+240: 			}else{
+241: 				tffirstname.setStyle("-fx-background-color: #ffffff");
+242: 				tflastname.setStyle("-fx-background-color: #ffffff");
+243: 				tfemail.setStyle("-fx-background-color: #ffffff");
+244: 				tfhiredate.setStyle("-fx-background-color: #ffffff");
+245: 				tfphone.setStyle("-fx-background-color: #ffffff");
+246: 				tfcommis.setStyle("-fx-background-color: #ffffff");
+247: 				tfsalary.setStyle("-fx-background-color: #ffffff");
+248: 				tfdepartid.setStyle("-fx-background-color: #ffffff");
+249: 				tfjobid.setStyle("-fx-background-color: #ffffff");
+250: 				tfmanagerid.setStyle("-fx-background-color: #ffffff");
+251: 				tfsearchmanager.setStyle("-fx-background-color: #ffffff");
+252: 			}
+253: 			
+254: 	    }
+255: 
+256: 	    @FXML
+257: 	    void initialize() {
+258: 	    	 exec = Executors.newCachedThreadPool((runnable) -> {
+259: 	             Thread t = new Thread (runnable);
+260: 	             t.setDaemon(true);
+261: 	             return t;
+262: 	         });
+263: 	         empIdColumn.setCellValueFactory(cellData -> cellData.getValue().employeeIdProperty().asObject());
+264: 	         empNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
+265: 	         empLastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
+266: 	         empEmailColumn.setCellValueFactory(cellData -> cellData.getValue().emailProperty());
+267: 	         empPhoneNumberColumn.setCellValueFactory(cellData -> cellData.getValue().phoneNumberProperty());
+268: 	         empHireDateColumn.setCellValueFactory(cellData -> cellData.getValue().hireDateProperty());
+269: 
+270: 	         empIdColumn3.setCellValueFactory(cellData -> cellData.getValue().employeeIdProperty().asObject());
+271: 	         empNameColumn3.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
+272: 	         empLastNameColumn3.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
+273: 	         empEmailColumn3.setCellValueFactory(cellData -> cellData.getValue().emailProperty());
+274: 	         
+275: 	         
+276: 	         //tfhiredate.setPromptText("생일을 선택하세요.");
+277: 	         //tfhiredate.setMaxWidth(381.0);
+278: 	         //tfhiredate.setStyle("-fx-background-color: #0000ff");
+279: 	         //
+280: 	         employeeTable.setOnMouseClicked(e ->{
+281: 	         	if(employeeTable.getSelectionModel().getSelectedItem()!=null ){
+282: 	         		 edit(false);
+283: 	         		 edit2(true);
+284: 			    	 clear();
+285: 			    	 //-----
+286: 			    	 btnAddAfEmployee.setVisible(true);
+287: 			    	 btndelEmployee.setVisible(true);
+288: 			    	 
+289: 	         		Employee user = (Employee)employeeTable.getSelectionModel().getSelectedItem();
+290: 	         		try {
+291: 	         			//DB에서 찾아서
+292: 	         			EmployeeDto edto=employeeDAO.findEmployeeById(user.getEmployeeId()+"");
+293: 						Employee emp=EmpConvert.toPro(edto);
+294: 						//현재 정보를 보인다.
+295: 						tfempid.setText(emp.getEmployeeId()+"");
+296: 						tffirstname.setText(emp.getFirstName());
+297: 						tflastname.setText(emp.getLastName());
+298: 						tfemail.setText(emp.getEmail());
+299: 						//달력으로 바꿈
+300: 						tfhiredate.getEditor().setText(sdf.format((java.util.Date)(emp.getHireDate())));
+301: 						tfphone.setText(emp.getPhoneNumber());
+302: 						tfcommis.setText(emp.getCommissionPct()+"");
+303: 						tfsalary.setText(emp.getSalary()+"");
+304: 						tfdepartid.setText(emp.getDepartmanId()+"");
+305: 						tfjobid.setText(emp.getJobId()+"");
+306: 						tfmanagerid.setText(emp.getManagerId()+"");
+307: 						System.out.println("------->"+emp.getDepartmanId()+"");
+308: 					} catch (SQLException e1) {
+309: 						System.out.println("DB에서 상세정보를 가져오다 에라가 발생했습니다.");
+310: 					}
+311: 	             	//System.out.println(user.getEmployeeId()+"  "+user.getFirstName()+" "+user.getLastName());
+312: 	             	//lbhello.setText(user.getEmployeeId()+"  "+user.getFirstName()+" "+user.getLastName());
+313: 	         	}
+314: 	           }
+315: 	         );
+316: 	         btnAddAfEmployee.setVisible(false);
+317: 	         btndelEmployee.setVisible(false);
+318: 	         tvSearchManager.setOnMouseClicked(e ->{
+319: 		         	if(tvSearchManager.getSelectionModel().getSelectedItem()!=null ){
+320: 		         		Employee user = (Employee)tvSearchManager.getSelectionModel().getSelectedItem();
+321: 		         		tfmanagerid.setText(user.getFirstName()+" "+user.getLastName()+"("+user.getEmployeeId()+")");
+322: 		         	}
+323: 		           }
+324: 		         );
+325: 	    }
+326: 	    
+327: 	    @FXML
+328: 	    void actionAllEmployee(ActionEvent event) {
+329: 	    	 try {
+330: 	    		 
+331: 	    		 String updatemanager=tfupdatemanager.getText();
+332: 	    		 List<EmployeeDto> uempdto= employeeDAO.findManagersByName(updatemanager);
+333: 	 	    	 ObservableList<Employee> updatemanagerList= EmpConvert.toObservProFromDto(uempdto);
+334: 	 	    	 employeeTable.setItems(updatemanagerList);
+335: 	 	    	 tfupdatemanager.setText("");
+336: 	    		 		    	 
+337: 	         } catch (SQLException e){
+338: 	             System.out.println("Error occurred " + e);
+339: 	         }
+340: 	    	 btnAddAfEmployee.setVisible(false);
+341: 	    	 btndelEmployee.setVisible(false);
+342: 	    	 
+343: 	    }
+344: 	    @FXML
+345: 	    private void showEmpoyeeTable (ObservableList<Employee> empData)  {
+346: 	    	employeeTable.setItems(empData);
+347: 	    }
+348: 	    //버튼을 클릭하여  직원추가 준비 
+349: 	    @FXML
+350: 	    void actionReadyAddEmployee(ActionEvent event) {
+351: 	    	clear();
+352: 	    	edit(false);
+353: 	    	edit2(true);
+354: 	    	cbJobid.setItems(null);
+355: 	    	cbdepartid.setItems(null);
+356: 	    	leftsplit.setDividerPositions(0.6);
+357: 	    	employeeTable.setItems(null);
+358: 	    	
+359: 	    	 try {
+360: 	    		    //모든 잡을 가져와 잡콤보에 넣기----------------
+361: 	    		    List<String> sjob=employeeDAO.findAllJobs();
+362: 			   		ObservableList<String> jobs=EmpConvert.strList(sjob);
+363: 			        shoeJobsTable(jobs);
+364: 			        //-----------------------------------
+365: 			        //모든 부서를 가져와 콤보에 넣기-----------------
+366: 			        ObservableList<String> dpnames = FXCollections.observableArrayList();
+367: 			        List<DepartmentDto> ndlist=employeeDAO.findAllDepartments2 ();
+368: 			        ObservableList<Department> dlists = DepConvert.toObservProFromDto(ndlist);
+369: 			        for (Department dd:dlists) {
+370: 			        	dpnames.add(String.format("%s(%d)", dd.getDepartment_name(),dd.getDepartment_id()));
+371: 					}
+372: 	    			cbdepartid.setItems(dpnames);
+373: 	    	        //--------------------------------------
+374: 		        } catch (SQLException e){
+375: 		            System.out.println("Error occurred actionReadyAddEmployee " + e);
+376: 		        }
+377: 	    	 btnAddAfEmployee.setVisible(true);
+378: 	    	 btndelEmployee.setVisible(true);
+379: 	    }
+380:         //잡콥보를 선택하면 잡아이디를 tf에 넣기
+381: 	    @FXML
+382: 	    void actionJobClicked(ActionEvent event) {
+383: 	    	if(cbJobid.getSelectionModel().getSelectedItem()!=null){
+384: 	    		String coms =  cbJobid.getSelectionModel().getSelectedItem().toString();    
+385: 		    	 tfjobid.setText(coms);
+386: 		    	 System.out.println("잡아이디을 선택==========>"+coms);
+387: 	    	}
+388: 	    }
+389: 	    //depart(59) ==> 59
+390: 	    private String depid(String msg){
+391: 	    	String ss="";
+392: 	    	if(msg.indexOf("(")!=-1 && msg.indexOf(")")!=-1 ){
+393: 	    		ss=msg.substring(msg.indexOf("(")+1);
+394: 	    		ss=ss.substring(0,ss.indexOf(")"));
+395: 	    	}else{
+396: 	    		ss=msg.trim();
+397: 	    	}
+398: 	    	return ss.trim();
+399: 	    }
+400: 	  //depart(59) ==> depart
+401: 	    private String dep(String msg){
+402: 	    	String ss="";
+403: 	    	if(msg.indexOf("(")!=-1){
+404: 	    		ss=msg.substring(0, msg.indexOf("("));
+405: 	    	}else{
+406: 	    		ss=msg.trim();
+407: 	    	}
+408: 	    	return ss.trim();
+409: 	    }
+410: 	    //부서콤보에서 부서명으로 관리자 찾기
+411: 	    @FXML
+412: 	    void actionDepartClicked(ActionEvent event) {
+413: 	    	if(cbdepartid.getSelectionModel().getSelectedItem()!=null){
+414: 	    		String departid =  cbdepartid.getSelectionModel().getSelectedItem().toString();    
+415: 	    		
+416: 		    	 tfdepartid.setText(departid);//여기를 수정할 것.
+417: 		    	 System.out.println("부서명(부서아이디)================>"+departid);
+418: 		    	 
+419: 		    	 try {
+420: 		    		 ObservableList<String> dpnames = FXCollections.observableArrayList();
+421: 		    		//부서명을 이용하여 관리자정보를 찾음-------------
+422: 		    		 List<EmployeeDto> edtos=employeeDAO.findEmployeesByDepartName(dep(departid));//depart(59) ==> depart
+423: 					 ObservableList<Employee> employeess= EmpConvert.toObservProFromDto(edtos);
+424: 			        for (Employee dd:employeess) {
+425: 			        	dpnames.add(String.format("%s %s[%s](%d)", dd.getFirstName(),dd.getLastName(), dd.getEmail(),dd.getEmployeeId()));
+426: 					}
+427: 			        //관리자 콤보에 관리자 아이디를 넣기
+428: 	    			//cbmanager.setItems(dpnames);
+429: 	    			//-------------------------------------
+430: 				} catch (SQLException e) {
+431: 					System.out.println("actionDepartClicked : "+e);
+432: 				}
+433: 	    	}
+434: 	    }
+435: 	    
+436: 	    void shoeJobsTable(ObservableList<String>jobs){
+437: 	    	if(cbJobid!=null){
+438: 	    		cbJobid.setItems(jobs);
+439: 	    	}
+440: 	    }
+441: 	    //관리자 콤보를 선택하면 관리자 정보를 tf에 넣기
+442: //	    @FXML
+443: //	    void actionManagerClicked(ActionEvent event) {
+444: //	    	if(cbmanager.getSelectionModel().getSelectedItem()!=null){
+445: //	    		String manager =  cbmanager.getSelectionModel().getSelectedItem().toString();    
+446: //		    	 tfmanagerid.setText(manager);
+447: //		    	 System.out.println("========================>"+manager);
+448: //	    	}
+449: //	    }
+450: 	    
+451: 	    public void handleHelp() {
+452: 	        Alert alert = new Alert (Alert.AlertType.INFORMATION);
+453: 	        alert.setTitle("필수요소를 꼭 입력하십시오.");
+454: 	        alert.setHeaderText("필수요소확인");
+455: 	        alert.setContentText("필수요소를 꼭 입력하세요. 필수요소는 파란색입니다..");
+456: 	        alert.show();
+457: 	    }
+458: 	    
+459: 	    
+460: 	    //emp 수정
+461: 	    @FXML
+462: 	    void actionUpdateEmployee(ActionEvent event) {
+463: 	    	Alert alert = new Alert(AlertType.CONFIRMATION);
+464: 	    	alert.setTitle("Confirmation Dialog");
+465: 	    	alert.setHeaderText("직원의 정보를 수정하시겠습니까?");
+466: 	    	alert.setContentText("정말 수정하시겠습니까?");
+467: 
+468: 	    	Optional<ButtonType> result = alert.showAndWait();
+469: 	    	if (result.get() != ButtonType.OK){
+470: 	    	   return;  //작업 끝냄
+471: 	    	} 
+472: 	    	String empId=tfempid.getText();
+473: 	    	String empfn=tffirstname.getText();
+474: 	    	String empln=tflastname.getText();
+475: 	    	String empmail=tfemail.getText();
+476: 	    	String emphire=tfhiredate.getEditor().getText();
+477: 	    	//sqldate로 변환준비
+478: 	    	String empphone=tfphone.getText();
+479: 	    	//-----------------------------------------------
+480: 	    	String emppct=tfcommis.getText();
+481: 	    	String empsal=tfsalary.getText();
+482: 	    	String empdepid=tfdepartid.getText(); //수정필요
+483: 	    	String empjobid=tfjobid.getText();   //수정필요 ->jobid(10)
+484: 	    	String empmanid=tfmanagerid.getText();//수정필요 ->
+485: 	    	System.out.println(String.format("%s,%s,%s,%s,%s", empfn,empln,empmail,emphire,empphone));
+486: 	    	System.out.println(String.format("%s,%s,%s,%s,%s", emppct,empsal,depid(empdepid),empjobid,depid(empmanid)));
+487: 	    	
+488: 	    	if(empId.equals("") || empfn.equals("") || empln.equals("")|| empmail.equals("")||
+489: 	    			emphire.equals("")|| empjobid.equals("")|| empmanid.equals("")){
+490: 	    		handleHelp();
+491: //	    		Alert alert2 = new Alert(AlertType.ERROR);
+492: //	    		alert2.setTitle("Exception Dialog");
+493: //	    		alert2.setHeaderText("예외 발생");
+494: //	    		alert2.setContentText(new SQLException("Null Reference Excption ").toString());
+495: //	    		alert2.showAndWait();
+496: 	    		return;
+497: 	    	}
+498: 
+499: 	    	Date dhiredate= PTS.toDaeS(emphire);
+500: 	    	
+501: 	    	System.out.println("emphire-------------------"+emphire);
+502: 	    	System.out.println("dhiredate-------------------"+dhiredate);
+503: 	    	Employee emp=new Employee();
+504: 	    	if(!empId.equals("")){
+505: 	    		emp.setEmployeeId(Integer.parseInt(empId));
+506: 	    	}
+507: 	    	emp.setFirstName(empfn);
+508: 	    	emp.setLastName(empln);
+509: 	    	emp.setEmail(empmail);
+510: 	    	emp.setHireDate(dhiredate);
+511: 	    	emp.setPhoneNumber(empphone);
+512: 	    	if(!emppct.equals("")){
+513: 	    		emp.setCommissionPct(Double.parseDouble(emppct));
+514: 	    	}
+515: 	    	if(!empsal.equals("")){
+516: 	    		emp.setSalary(Double.parseDouble(empsal));
+517: 	    	}
+518: 	    	if(!empdepid.equals("")){
+519: 	    		emp.setDepartmantId(Integer.parseInt(depid(empdepid)));
+520: 	    	}
+521: 	    	emp.setJobId(empjobid);
+522: 	    	if(!empmanid.equals("")){
+523: 	    		emp.setManagerId(Integer.parseInt(depid(empmanid)));
+524: 	    	}
+525: 	    	EmployeeDto edot=EmpConvert.toDto(emp);
+526: 	    	try {
+527: 	    		System.out.println(" getFirstName------------------------------"+emp.getFirstName());
+528: 	    		System.out.println(" getLastName------------------------------"+emp.getLastName());
+529: 				boolean isS=employeeDAO.updateEmployee(edot);
+530: 				if(isS){
+531: 					 System.out.println(" updateEmployee 성공-------------------------------"+empId);
+532: 		             ObservableList<Employee> empData=FXCollections.observableArrayList();
+533: 		             EmployeeDto eedot=employeeDAO.findEmployeeById(""+empId);  
+534: 		             Employee empDat = EmpConvert.toPro(eedot);
+535: 		             System.out.println(" actionUpdateEmployee 등록된 emp찾기-------------------------------"+empId);
+536: 		             if(empDat!=null){
+537: 		            	 empData.add(empDat);
+538: 			             showEmpoyeeTable(empData);
+539: 		             }
+540: 		 	    	 edit(false);
+541: 		 	    	 edit2(false);
+542: 			    	 clear();
+543: 				}else{
+544: 					 System.out.println(" updateEmployee 실패------------------------------"+empId);
+545: 				}
+546: 			} catch (SQLException e) {
+547: 				System.out.println(" actionUpdateEmployee==>"+e);
+548: 			}
+549: 	    	 btnAddAfEmployee.setVisible(false);
+550: 	    	 btndelEmployee.setVisible(false);
+551: 	    }
+552: 		
+553: 	    @FXML
+554: 	    void actionDeleteEmployee(ActionEvent event){
+555: 
+556: 	    	
+557: 	    	Alert alert = new Alert(AlertType.CONFIRMATION);
+558: 	    	alert.setTitle("Confirmation Dialog");
+559: 	    	alert.setHeaderText("직원의 정보를 삭제하시겠습니까?");
+560: 	    	alert.setContentText("정말 수정하시겠습니까?");
+561: 	    	Optional<ButtonType> result = alert.showAndWait();
+562: 	    	if (result.get() != ButtonType.OK){
+563: 	    	   return;
+564: 	    	} 
+565: 	    	
+566: 	    	
+567: 	    	String empId=tfempid.getText();
+568: 	    	if(empId.equals("")){
+569: 	    		handleHelp();
+570: 	    		return;
+571: 	    	}
+572: 	    
+573: 	    	Employee emp=new Employee();
+574: 	    	if(!empId.equals("")){
+575: 	    		emp.setEmployeeId(Integer.parseInt(empId));
+576: 	    	}
+577: 	    	EmployeeDto edot=EmpConvert.toDto(emp);
+578: 	    	try {
+579: 				boolean isS=employeeDAO.deleteEmployee(edot);
+580: 				if(isS){
+581: 					 System.out.println(" deleteEmployee 성공-------------------------------"+empId);
+582: 		 	    	 edit(false);
+583: 		 	    	 edit2(false);
+584: 			    	 clear();
+585: 				}else{
+586: 					 System.out.println(" deleteEmployee 실패------------------------------"+empId);
+587: 				}
+588: 			} catch (SQLException e) {
+589: 				System.out.println(" deleteEmployee==>"+e);
+590: 			}
+591: 	    	 btndelEmployee.setVisible(false);
+592: 	    }
+593: 	    
+594: 	    @FXML
+595: 	    void actionSearchManger(ActionEvent event) {
+596: 	    	
+597: 	    	String manid=tfsearchmanager.getText();
+598: 	    	ObservableList<Employee> managers=null;
+599: 			try {
+600: 				List<EmployeeDto> edotmana=employeeDAO.findManagersByName(manid);
+601: 				managers = EmpConvert.toObservProFromDto(edotmana);
+602: 				tvSearchManager.setItems(managers);
+603: 		    	tfsearchmanager.setText("");
+604: 			} catch (SQLException e) {
+605: 
+606: 			}
+607: 	    	
+608: 	    	
+609: 	    }
+610: 	    @FXML
+611: 	    private Button btnCancelEmployee;
+612: 	    
+613: 	    @FXML
+614: 	    void actionCancelEmployee(ActionEvent event){
+615: 	    	leftsplit.setDividerPositions(0.98);
+616: 	    	edit(false);
+617:  	    	edit2(false);
+618: 	    	clear();
+619: 	    }
+620: 	   
+621: 	    
+622: }

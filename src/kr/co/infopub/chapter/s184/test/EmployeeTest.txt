@@ -1,0 +1,23 @@
+01: package kr.co.infopub.chapter.s184.test;
+02: 
+03: import java.sql.SQLException;
+04: import java.util.List;
+05: 
+06: import kr.co.infopub.chapter.s184.dto.EmployeeDto;
+07: import kr.co.infopub.chapter.s184.model.EmployeeDAO;
+08: 
+09: public class EmployeeTest {
+10: 
+11: 	public static void main(String[] args) {
+12: 		EmployeeDAO ddao=new EmployeeDAO();
+13: 		try {
+14: 			List<EmployeeDto> lists=ddao.findAllEmployees();
+15: 			for (EmployeeDto dd: lists) {
+16: 				String st=String.format("%d(%s %s)", dd.getEmployeeId(),dd.getFirstName(),dd.getLastName());
+17: 				System.out.println(st);
+18: 			}
+19: 		} catch (SQLException e) {
+20: 			System.out.println( e);
+21: 		}
+22: 	}
+23: }

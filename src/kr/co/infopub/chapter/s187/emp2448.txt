@@ -1,0 +1,48 @@
+package kr.co.infopub.chapter.s187;
+
+import java.sql.Date;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+
+import kr.co.infopub.chapter.s185.dto.Employee;
+import kr.co.infopub.chapter.s185.model.EmployeeDAO;
+
+public class EmpTableFxController {
+
+	@FXML
+    private TableView<Employee> employeeTable;
+    @FXML
+    private TableColumn<Employee, Integer>  empIdColumn;
+    @FXML
+    private TableColumn<Employee, String>  empNameColumn;
+    @FXML
+    private TableColumn<Employee, String> empLastNameColumn;
+    @FXML
+    private TableColumn<Employee, String> empEmailColumn;
+    @FXML
+    private TableColumn<Employee, String> empPhoneNumberColumn;
+    @FXML
+    private TableColumn<Employee, Date> empHireDateColumn;
+    
+    @FXML
+    private Button searchEmpsBtn;
+    
+    @FXML
+    private Label lbhello;
+    
+    
+    EmployeeDAO employeeDAO=new EmployeeDAO();
+
+    @FXML
+    void searchEmployees(ActionEvent event) {
+
+    }
+
+    @FXML
+    void initialize() {
+    }
+}

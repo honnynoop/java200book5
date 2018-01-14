@@ -1,0 +1,41 @@
+01: package kr.co.infopub.chapter.s185.dto;
+02: 
+03: public class DepCount {
+04: 	
+05: 	private int count;
+06: 	private int department_id;
+07: 	private String department_name="NOTYET";
+08: 	public DepCount() {
+09: 		super();
+10: 	}
+11: 	public DepCount(int count, int department_id, String department_name) {
+12: 		super();
+13: 		this.count = count;
+14: 		this.department_id = department_id;
+15: 		this.department_name = department_name;
+16: 	}
+17: 	@Override
+18: 	public String toString() {
+19: 		return "DepCount [count=" + count + ", department_id=" + department_id + ", department_name=" + department_name
+20: 				+ "]";
+21: 	}
+22: 	public int getCount() {
+23: 		return count;
+24: 	}
+25: 	public void setCount(int count) {
+26: 		this.count = count;
+27: 	}
+28: 	public int getDepartment_id() {
+29: 		return department_id;
+30: 	}
+31: 	public void setDepartment_id(int department_id) {
+32: 		this.department_id = department_id;
+33: 	}
+34: 	public String getDepartment_name() {
+35: 		return department_name;
+36: 	}
+37: 	public void setDepartment_name(String department_name) {
+38: 		this.department_name = department_name;
+39: 	}
+40: 
+41: }
